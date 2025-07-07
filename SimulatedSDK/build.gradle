@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.necessaryevil.simulatedsdk'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.necessaryevil.simulatedsdk"
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+repositories {
+    maven { url 'https://repo.dairy.foundation/releases' }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation('org.firstinspires.ftc:Hardware:10.2.0')
+    implementation('org.firstinspires.ftc:RobotCore:10.2.0')
+    implementation 'com.google.android.material:material:1.10.0'
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'org.ejml:ejml-all:0.44.0'
+    implementation('org.psilynx:psikit:0.0.3')
+}
