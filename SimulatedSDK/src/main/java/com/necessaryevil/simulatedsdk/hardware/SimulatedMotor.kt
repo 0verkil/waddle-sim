@@ -217,6 +217,9 @@ fun main() {
     rf.power = -1.0
     rb.power = -1.0
 
+    val asdf = edu.wpi.first.math.geometry.Pose2d()
+    println(asdf)
+
     chassis.pose = Pose2d(0.24, 1.8288, Rotation2d())
 
     leftFront.constrainAngleByMotor(lf)
