@@ -4,11 +4,36 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorController
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.configuration.annotations.MotorType
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
+import kotlin.math.PI
 
-class DcMotorWrapper(val port: Int) : DcMotor {
+class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor) : DcMotor {
 
-    var zpb : DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+    var zpb: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+    var motorDirection: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
+    var motorType: DcMotorWrapper.MotorType = DcMotorWrapper.MotorType.GENERIC
+
+    enum class MotorType {
+        GOBILDA_435,
+        GOBILDA_1150,
+        GENERIC
+    }
+
+    companion object {
+
+        val cpr: Map<MotorType, Double> = mapOf(
+            DcMotorWrapper.MotorType.GENERIC to 1.0,
+            DcMotorWrapper.MotorType.GOBILDA_435 to 384.5,
+            DcMotorWrapper.MotorType.GOBILDA_1150 to 145.1,
+
+        )
+
+        fun getTicksFromMotorType(motorType: DcMotorWrapper.MotorType, radians: Double): Int {
+            val rot = radians / (2.0 * PI)
+            return (cpr[motorType]?.times(rot))?.toInt() ?: 0
+        }
+    }
 
     override fun getMotorType(): MotorConfigurationType? {
         TODO("Not yet implemented")
@@ -38,7 +63,8 @@ class DcMotorWrapper(val port: Int) : DcMotor {
 
     @Deprecated("ts sucks ass don't use it")
     override fun setPowerFloat() {
-        TODO("Not yet implemented")
+        zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+        power = 0.0
     }
 
     override fun getPowerFloat(): Boolean {
@@ -58,7 +84,7 @@ class DcMotorWrapper(val port: Int) : DcMotor {
     }
 
     override fun getCurrentPosition(): Int {
-        TODO("Not yet implemented")
+        return getTicksFromMotorType(motorType, internalMotor.angle)
     }
 
     override fun setMode(mode: DcMotor.RunMode?) {
@@ -70,19 +96,21 @@ class DcMotorWrapper(val port: Int) : DcMotor {
     }
 
     override fun setDirection(direction: DcMotorSimple.Direction?) {
-        TODO("Not yet implemented")
+        if (direction != null) {
+            motorDirection = direction
+        }
     }
 
     override fun getDirection(): DcMotorSimple.Direction? {
-        TODO("Not yet implemented")
+        return motorDirection
     }
 
     override fun setPower(power: Double) {
-        TODO("Not yet implemented")
+        internalMotor.power = if (motorDirection == DcMotorSimple.Direction.FORWARD) power else -power
     }
 
     override fun getPower(): Double {
-        TODO("Not yet implemented")
+        return internalMotor.power
     }
 
     override fun getManufacturer(): HardwareDevice.Manufacturer? {
@@ -108,8 +136,4 @@ class DcMotorWrapper(val port: Int) : DcMotor {
     override fun close() {
         TODO("Not yet implemented")
     }
-}
-
-class DcMotorModel(val rpm: Int, ) {
-
 }
