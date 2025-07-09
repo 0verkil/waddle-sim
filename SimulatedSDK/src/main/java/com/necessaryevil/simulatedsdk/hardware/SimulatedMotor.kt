@@ -1,20 +1,14 @@
 package com.necessaryevil.simulatedsdk.hardware
 
-import android.graphics.Color
-import android.util.Log
-import org.ejml.data.DMatrixRMaj
 import org.ejml.simple.SimpleMatrix
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.RLOGServer
 import org.psilynx.psikit.mechanism.LoggedMechanism2d
-import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
-import org.psilynx.psikit.mechanism.LoggedMechanismRoot2d
 import org.psilynx.psikit.wpi.Color8Bit
 import org.psilynx.psikit.wpi.Pose2d
 import org.psilynx.psikit.wpi.Rotation2d
 import java.lang.Thread.sleep
-import java.util.Arrays
 import java.util.function.DoubleSupplier
 import java.util.function.Supplier
 import kotlin.math.PI
@@ -25,13 +19,13 @@ import kotlin.math.sign
 /**
  * Simulated motor class. Control equations: https://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SystemModeling
  *
- * @param moi: Moment of inertia of the motor, in kgm^2.
+ * @param internalMoi: Moment of inertia of the motor, in kgm^2.
  * @param kFriction: Viscous friction constant, in Nms.
  * @param kMotor: Represents both the electromotive force constant (V/rad/s) and the torque constant (Nm/Amp).
  * @param resistance: Electrical resistance, in ohms.
  * @param inductance: Electrical inductance, in H (Henry).
  */
-class SimulatedMotor(val moi: Double, val kFriction: Double, val kMotor: Double, val resistance: Double, val inductance: Double) {
+class SimulatedMotor(val internalMoi: Double, val kFriction: Double, val kMotor: Double, val resistance: Double, val inductance: Double) {
 
     /**
      * State vector: [angular position, angular velocity, current].
@@ -61,17 +55,27 @@ class SimulatedMotor(val moi: Double, val kFriction: Double, val kMotor: Double,
      */
     var power = 0.0
 
-    val disturbanceMatrix = SimpleMatrix(doubleArrayOf(0.0, -1.0 / moi, 0.0))
+    val disturbanceMatrix = SimpleMatrix(doubleArrayOf(0.0, -1.0 / internalMoi, 0.0))
 
     /**
      * The torque resisting the motor. In units of Nm.
      */
-    private val load get() = loadInputs.fold(0.0) {acc, x -> x.asDouble + acc}
+    val load get() = loadInputs.fold(0.0) {acc, x -> x.asDouble + acc}
 
     /**
      * Dynamic load modeling. In units of Nm.
      */
     val loadInputs: ArrayList<DoubleSupplier> = ArrayList()
+
+    /**
+     * Dynamic moment of inertia modeling. In units of kgm^2.
+     */
+    val moiInputs: ArrayList<DoubleSupplier> = ArrayList()
+
+    /**
+     * True moi of the motor.
+     */
+    val moi get() = moiInputs.fold(internalMoi) {acc, x -> x.asDouble + acc}
 
     val rpm: Double get() = outputMatrix.mult(state).get(1, 0)
 
@@ -87,8 +91,8 @@ class SimulatedMotor(val moi: Double, val kFriction: Double, val kMotor: Double,
 
     init {
         stateMatrix.set(0, 1, 1.0)
-        stateMatrix.set(1, 1, -kFriction / moi)
-        stateMatrix.set(1, 2, kMotor / moi)
+        stateMatrix.set(1, 1, -kFriction / internalMoi)
+        stateMatrix.set(1, 2, kMotor / internalMoi)
         stateMatrix.set(2, 1, -kMotor / inductance)
         stateMatrix.set(2, 2, -resistance / inductance)
         outputMatrix.set(1, 1, 30.0 / PI)
@@ -96,6 +100,12 @@ class SimulatedMotor(val moi: Double, val kFriction: Double, val kMotor: Double,
     }
 
     fun update(dt: Double) {
+
+        // update model for new moi
+        stateMatrix.set(1, 1, -kFriction / moi)
+        stateMatrix.set(1, 2, kMotor / moi)
+        disturbanceMatrix.set(1, 0, -1.0 / moi)
+
         val prevAngle = angle
 
         // clamp power
@@ -116,14 +126,22 @@ class SimulatedMotor(val moi: Double, val kFriction: Double, val kMotor: Double,
         loadInputs.add(load)
     }
 
+    fun addMoi(moi: DoubleSupplier) {
+        moiInputs.add(moi)
+    }
+
     companion object {
-        val GOBILDA_435 get() = SimulatedMotor(0.01, 0.000109, 0.256, 1.30434782609, 0.01)
+        val GOBILDA_435 get() = SimulatedMotor(0.05, 0.000109, 0.256, 1.30434782609, 0.01)
         val GOBILDA_1150 get() = SimulatedMotor(0.005, 0.000179702360396, 0.0969370938832, 1.30434782609, 0.01)
     }
 
 }
 
 fun main() {
+    var timeElapsed = 0.0
+    Logger.setTimeSource { timeElapsed }
+
+
     val pivot0 = SimulatedMotor.GOBILDA_435
     val pivot1 = SimulatedMotor.GOBILDA_435
     val slide0 = SimulatedMotor.GOBILDA_435
@@ -162,7 +180,8 @@ fun main() {
         "leftBack",
         0.1,
         -0.1524,
-        0.1524
+        0.1524,
+        reversed = true
     )
 
     val rightBack = MecanumWheel(
@@ -176,7 +195,8 @@ fun main() {
         "rightFront",
         0.1,
         0.1524,
-        -0.1524
+        -0.1524,
+        reversed = true
     )
 
     val chassis = Chassis(
@@ -193,6 +213,9 @@ fun main() {
     val rb = SimulatedMotor.GOBILDA_435
 
     lf.power = 1.0
+    lb.power = 1.0
+    rf.power = -1.0
+    rb.power = -1.0
 
     chassis.pose = Pose2d(0.24, 1.8288, Rotation2d())
 
@@ -240,6 +263,11 @@ fun main() {
         Logger.recordOutput("Slide power", slide0.power)
         Logger.recordOutput("Slide position", slide0.angle)
         Logger.recordOutput("LeftFront Speed", lf.rpm)
+        Logger.recordOutput("Left Front Motor Delta Location", lf.deltaAngle)
+        Logger.recordOutput("Left Front Motor Location", lf.angle)
+        Logger.recordOutput("Left Front Motor Load", lf.load)
+        Logger.recordOutput("LF MOI", lf.moi)
+        Logger.recordOutput("lfw moi", leftFront.moi)
         //println(AngleUnit.normalizeRadians(pivot0.angle))
 
         /*motors.update(0.001)
@@ -256,7 +284,6 @@ fun main() {
             } else if (error > PI) {
                 error -= 2.0 * PI
             }
-            println("error: $error")
             val power = error * p + cos(pivot.angle) * g
 
             Logger.recordOutput("Power", power)
@@ -272,6 +299,7 @@ fun main() {
         counter += 1
 
         sleep(2)
+        timeElapsed += 0.001
 
         Logger.periodicAfterUser(0.0, 0.0)
     }

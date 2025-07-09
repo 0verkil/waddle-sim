@@ -16,24 +16,31 @@ class Chassis(mass: Double, vararg val wheels: Wheel, val centerOfRotation: Tran
     init {
         // add correct mass
         for (wheel in wheels) {
-            wheel.simAppend(PhysicsLigament("chassis", mass / numWheels.toDouble(), lineWidth = 0.0))
+            wheel.simAppend(PhysicsLigament("chassis", mass / numWheels.toDouble(), length=Translation2d(wheel.x, wheel.y).norm ,lineWidth = 0.0))
         }
     }
 
     fun update(dt: Double) {
         for (wheel in wheels) {
             wheel.update(dt)
+            Logger.recordOutput("Wheel angle", wheel.angle)
+            Logger.recordOutput("Expected wheel angle", wheel.angleSupplier.get())
+            Logger.recordOutput("Is this thing on?", System.nanoTime())
         }
 
         // sum velocities
         var angvel = 0.0
         var xvel = 0.0
         var yvel = 0.0
+        var i = 0
         for (wheel in wheels) {
 
             // add vel
             val movementVector = wheel.directionVector.times(wheel.angularVelocity.radians * wheel.length)
-            Logger.recordOutput("Movement", movementVector)
+            /*Logger.recordOutput("Length $i", wheel.length)
+            Logger.recordOutput("Angvel $i", wheel.angularVelocity.radians)
+            Logger.recordOutput("DeltaAngle $i", wheel.deltaAngle)
+            Logger.recordOutput("Movement $i", movementVector)*/
             Logger.recordOutput("Wheel Angvel", wheel.angularVelocity)
             xvel += movementVector.x
             yvel += movementVector.y
@@ -42,6 +49,7 @@ class Chassis(mass: Double, vararg val wheels: Wheel, val centerOfRotation: Tran
             val toWheel = Translation2d(wheel.x, wheel.y).minus(centerOfRotation)
             val deltaAngle = toWheel.angle - movementVector.angle
             angvel += movementVector.norm * sin(deltaAngle.radians) / toWheel.norm
+            i++
         }
 
         xvel /= numWheels.toDouble()
@@ -50,6 +58,7 @@ class Chassis(mass: Double, vararg val wheels: Wheel, val centerOfRotation: Tran
         Logger.recordOutput("X Velocity", xvel)
         Logger.recordOutput("Y Velocity", yvel)
         Logger.recordOutput("Ang Velocity", angvel)
+
 
         // forward euler cuz i'm lazy
         pose = Pose2d(pose.x + xvel * dt, pose.y + yvel * dt, pose.rotation + Rotation2d(angvel * dt))

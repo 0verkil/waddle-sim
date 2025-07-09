@@ -1,5 +1,6 @@
 package com.necessaryevil.simulatedsdk.hardware
 
+import org.psilynx.psikit.Logger
 import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.mechanism.LoggedMechanismObject2d
 import org.psilynx.psikit.wpi.Color8Bit
@@ -9,6 +10,7 @@ import java.util.function.Supplier
 import kotlin.coroutines.EmptyCoroutineContext.fold
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
 
 /**
@@ -25,7 +27,8 @@ open class PhysicsLigament(
     length: Double = 0.0,
     angle: Double = 0.0,
     lineWidth: Double = 10.0,
-    color: Color8Bit = Color8Bit(235, 137, 52)
+    color: Color8Bit = Color8Bit(235, 137, 52),
+    val isCircle: Boolean = false
 ) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color) {
 
     init {
@@ -48,9 +51,14 @@ open class PhysicsLigament(
     val physicsObjects: ArrayList<PhysicsLigament> = ArrayList()
     val centerOfMass: Translation2d
         get() {
-            // assume center is the midpoint, weight by mass as a scalar
-            var centerOfMass =
-                Translation2d(this.length * this.mass / 2.0, Rotation2d.fromDegrees(angle))
+            var centerOfMass = Translation2d()
+
+            if (!isCircle) {
+                // assume center is the midpoint, weight by mass as a scalar
+                centerOfMass =
+                    Translation2d(this.length * this.mass / 2.0, Rotation2d.fromDegrees(angle))
+            }
+
             // get the end of the segment
             val ligamentEnd = Translation2d(this.length, Rotation2d.fromDegrees(angle))
 
@@ -69,6 +77,34 @@ open class PhysicsLigament(
                 .div(mechanismMass)
             return centerOfMass
         }
+
+    // array of (moi, mass)
+    val moiPoses: ArrayList<Pair<Translation2d, Double>> get() {
+        // get position of mois of children
+        val out: ArrayList<Pair<Translation2d, Double>> = arrayListOf()
+
+        val ligamentEnd = Translation2d(this.length, Rotation2d.fromDegrees(angle))
+        physicsObjects.forEach {
+            // for every pose: switch to coordinate frame relative to end of segment
+            out.addAll(
+                it.moiPoses.map { Pair(it.first.rotateBy(Rotation2d.fromDegrees(angle)).plus(ligamentEnd), it.second) }
+            )
+        }
+
+        // append our own moi
+        if (isCircle) {
+            // if it's a circle, moi at (0, 0)
+            out.add(Pair(Translation2d(), mass))
+        } else {
+            // otherwise, moi at end of segment
+            out.add(Pair(ligamentEnd, mass))
+        }
+        return out
+    }
+
+    val moi: Double
+        get() = moiPoses.fold(0.0) {acc, x -> acc + x.second * x.first.norm.pow(2)}
+
 
     val mechanismMass: Double get() {
         var mass = this.mass
@@ -101,7 +137,9 @@ open class PhysicsLigament(
     ) {
         this.angle = offsetDegrees
         this.angleSupplier =
-            Supplier<Double> { (angle + other.deltaAngle * gearRatio).coerceIn(minDegrees, maxDegrees) }
+            Supplier<Double> { (angle + Math.toDegrees(other.deltaAngle) * gearRatio).coerceIn(minDegrees, maxDegrees) }
+        other.addLoad { this.angularLoad }
+        other.addMoi { this.moi }
     }
 
     fun constrainAngleByAngle(
