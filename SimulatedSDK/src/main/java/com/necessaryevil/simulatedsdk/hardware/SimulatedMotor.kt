@@ -1,5 +1,6 @@
 package com.necessaryevil.simulatedsdk.hardware
 
+import com.necessaryevil.simulatedsdk.SimulationObject
 import org.ejml.simple.SimpleMatrix
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.psilynx.psikit.Logger
@@ -25,7 +26,7 @@ import kotlin.math.sign
  * @param resistance: Electrical resistance, in ohms.
  * @param inductance: Electrical inductance, in H (Henry).
  */
-class SimulatedMotor(val internalMoi: Double, val kFriction: Double, val kMotor: Double, val resistance: Double, val inductance: Double) {
+class SimulatedMotor(val internalMoi: Double, val kFriction: Double, val kMotor: Double, val resistance: Double, val inductance: Double): SimulationObject {
 
     /**
      * State vector: [angular position, angular velocity, current].
@@ -99,7 +100,7 @@ class SimulatedMotor(val internalMoi: Double, val kFriction: Double, val kMotor:
         outputMatrix.set(0, 0, 1.0)
     }
 
-    fun update(dt: Double) {
+    override fun update(dt: Double) {
 
         // update model for new moi
         stateMatrix.set(1, 1, -kFriction / moi)
@@ -131,7 +132,7 @@ class SimulatedMotor(val internalMoi: Double, val kFriction: Double, val kMotor:
     }
 
     companion object {
-        val GOBILDA_435 get() = SimulatedMotor(0.05, 0.000109, 0.256, 1.30434782609, 0.01)
+        val GOBILDA_435 get() = SimulatedMotor(0.001, 0.000109, 0.256, 1.30434782609, 0.001)
         val GOBILDA_1150 get() = SimulatedMotor(0.005, 0.000179702360396, 0.0969370938832, 1.30434782609, 0.01)
     }
 
@@ -172,31 +173,33 @@ fun main() {
     val leftFront = MecanumWheel(
         "leftFront",
         0.1,
-        0.1524,
-        0.1524
+        0.1,
+        0.1,
+        reversed = true
     )
 
     val leftBack = MecanumWheel(
         "leftBack",
         0.1,
-        -0.1524,
-        0.1524,
-        reversed = true
+        -0.1,
+        0.1,
+        reversed = false
     )
 
     val rightBack = MecanumWheel(
         "rightBack",
         0.1,
-        -0.1524,
-        -0.1524
+        -0.1,
+        -0.1,
+        reversed = true
     )
 
     val rightFront = MecanumWheel(
         "rightFront",
         0.1,
-        0.1524,
-        -0.1524,
-        reversed = true
+        0.1,
+        -0.1,
+        reversed = false
     )
 
     val chassis = Chassis(
@@ -204,7 +207,9 @@ fun main() {
         leftFront,
         leftBack,
         rightFront,
-        rightBack
+        rightBack,
+        frontalArea=0.1161288,
+        trackwidth=0.2
     )
 
     val lf = SimulatedMotor.GOBILDA_435
@@ -213,9 +218,9 @@ fun main() {
     val rb = SimulatedMotor.GOBILDA_435
 
     lf.power = 1.0
-    lb.power = 1.0
-    rf.power = -1.0
-    rb.power = -1.0
+    lb.power = 0.6
+    rf.power = 0.7
+    rb.power = 0.3
 
     val asdf = edu.wpi.first.math.geometry.Pose2d()
     println(asdf)
@@ -253,24 +258,25 @@ fun main() {
         rf.update(0.001)
         rb.update(0.001)
 
-        Logger.recordOutput("Arm position (rad)", AngleUnit.normalizeRadians(pivot0.angle))
-        Logger.recordOutput("Arm velocity (rpm)", pivot0.rpm)
-        Logger.recordOutput("Current (amps)", pivot0.state.get(2, 0))
-        Logger.recordOutput("Target angle (rad)", targetAngle)
-        Logger.recordOutput("Error (rad)", AngleUnit.normalizeRadians(pivot0.angle - targetAngle))
-        Logger.recordOutput("Robot pose", chassis.pose)
-        Logger.recordOutput("Load (Nm)", pivot.angularLoad)
-        Logger.recordOutput("Center of Mass", pivot.centerOfMass)
+        Logger.recordOutput("Pivot/Arm position (rad)", AngleUnit.normalizeRadians(pivot0.angle))
+        Logger.recordOutput("Pivot/Arm velocity (rpm)", pivot0.rpm)
+        Logger.recordOutput("Pivot/Current (amps)", pivot0.state.get(2, 0))
+        Logger.recordOutput("Pivot/Target angle (rad)", targetAngle)
+        Logger.recordOutput("Pivot/Error (rad)", AngleUnit.normalizeRadians(pivot0.angle - targetAngle))
+        Logger.recordOutput("Drivetrain/Robot pose", chassis.pose)
+        Logger.recordOutput("Pivot/Load (Nm)", pivot.angularLoad)
+        Logger.recordOutput("Pivot/Center of Mass", pivot.centerOfMass)
         Logger.recordOutput("test", test)
-        Logger.recordOutput("Slide length", pivot.lengthSupplier.get())
-        Logger.recordOutput("Slide power", slide0.power)
-        Logger.recordOutput("Slide position", slide0.angle)
-        Logger.recordOutput("LeftFront Speed", lf.rpm)
-        Logger.recordOutput("Left Front Motor Delta Location", lf.deltaAngle)
-        Logger.recordOutput("Left Front Motor Location", lf.angle)
-        Logger.recordOutput("Left Front Motor Load", lf.load)
-        Logger.recordOutput("LF MOI", lf.moi)
-        Logger.recordOutput("lfw moi", leftFront.moi)
+        Logger.recordOutput("Slides/Slide length", pivot.lengthSupplier.get())
+        Logger.recordOutput("Slides/Slide power", slide0.power)
+        Logger.recordOutput("Slides/Slide position", slide0.angle)
+        Logger.recordOutput("Drivetrain/LeftFront Speed", lf.rpm)
+        Logger.recordOutput("Drivetrain/Left Front Motor Delta Location", lf.deltaAngle)
+        Logger.recordOutput("Drivetrain/Left Front Motor Location", lf.angle)
+        Logger.recordOutput("Drivetrain/Left Front Motor Load", lf.load)
+        Logger.recordOutput("Drivetrain/Left Front Wheel Torque", leftFront.angularLoad)
+        Logger.recordOutput("Drivetrain/LF MOI", lf.moi)
+        Logger.recordOutput("Drivetrain/lfw moi", leftFront.moi)
         //println(AngleUnit.normalizeRadians(pivot0.angle))
 
         /*motors.update(0.001)
@@ -297,6 +303,13 @@ fun main() {
         if (counter % 5000 == 0) {
             targetAngle = if (targetAngle < PI / 2.0) PI / 2.0 else PI / 4.0
             slide0.power *= -1.0
+        }
+
+        if (counter == 2000) {
+            lf.power = 0.0
+            lb.power = 0.0
+            rf.power = 0.0
+            rb.power = 0.0
         }
 
         counter += 1

@@ -1,5 +1,6 @@
 package com.necessaryevil.simulatedsdk.hardware
 
+import com.necessaryevil.simulatedsdk.SimulationObject
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.mechanism.LoggedMechanismObject2d
@@ -29,7 +30,7 @@ open class PhysicsLigament(
     lineWidth: Double = 10.0,
     color: Color8Bit = Color8Bit(235, 137, 52),
     val isCircle: Boolean = false
-) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color) {
+) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color), SimulationObject {
 
     init {
         constrainAngleByConstant(angle)
@@ -119,16 +120,16 @@ open class PhysicsLigament(
     /**
      * In Nm. Computed based on center of mass.
      */
-    val angularLoad: Double
+    open val angularLoad: Double
         get() = centerOfMass.norm * G *
                 physicsObjects.fold(this.mass) { acc, x: PhysicsLigament -> acc + x.mass } * cos(
             angle
         )
 
-    val linearForce: Double
+    open val linearForce: Double
         get() = mass * G * sin(angle)
 
-    fun constrainAngleByMotor(
+    open fun constrainAngleByMotor(
         other: SimulatedMotor,
         offsetDegrees: Double = 0.0,
         minDegrees: Double = Double.NEGATIVE_INFINITY,
@@ -137,7 +138,7 @@ open class PhysicsLigament(
     ) {
         this.angle = offsetDegrees
         this.angleSupplier =
-            Supplier<Double> { (angle + Math.toDegrees(other.deltaAngle) * gearRatio).coerceIn(minDegrees, maxDegrees) }
+            Supplier<Double> { (angle + Math.toDegrees(other.deltaAngle) / gearRatio).coerceIn(minDegrees, maxDegrees) }
         other.addLoad { this.angularLoad }
         other.addMoi { this.moi }
     }
@@ -150,7 +151,7 @@ open class PhysicsLigament(
         gearRatio: Double = 1.0
     ) {
         this.angleSupplier =
-            Supplier<Double> { (other.angle * gearRatio + offsetDegrees).coerceIn(minDegrees, maxDegrees) }
+            Supplier<Double> { (other.angle / gearRatio + offsetDegrees).coerceIn(minDegrees, maxDegrees) }
     }
 
     fun constrainAngleByDeltaAngle(
@@ -162,7 +163,7 @@ open class PhysicsLigament(
     ) {
         this.angle = offsetDegrees
         this.angleSupplier =
-            Supplier<Double> { (angle + other.deltaAngle * gearRatio).coerceIn(minDegrees, maxDegrees) }
+            Supplier<Double> { (angle + other.deltaAngle / gearRatio).coerceIn(minDegrees, maxDegrees) }
     }
 
     fun constrainLengthByLength(
@@ -173,7 +174,7 @@ open class PhysicsLigament(
         gearRatio: Double = 1.0
     ) {
         this.lengthSupplier =
-            Supplier<Double> { (other.length * gearRatio + offsetMeters).coerceIn(minMeters, maxMeters) }
+            Supplier<Double> { (other.length / gearRatio + offsetMeters).coerceIn(minMeters, maxMeters) }
     }
 
     fun constrainAngleByLength(
@@ -184,7 +185,7 @@ open class PhysicsLigament(
         gearRatio: Double = 1.0
     ) {
         this.angleSupplier = Supplier<Double> {
-            ((other.length / this.length).degrees * gearRatio + offsetDegrees).coerceIn(
+            ((other.length / this.length).degrees / gearRatio + offsetDegrees).coerceIn(
                 minDegrees,
                 maxDegrees
             )
@@ -199,7 +200,7 @@ open class PhysicsLigament(
         gearRatio: Double = 1.0
     ) {
         this.lengthSupplier = Supplier<Double> {
-            (other.angle.radians * other.length * gearRatio + offsetMeters).coerceIn(
+            (other.angle.radians * other.length / gearRatio + offsetMeters).coerceIn(
                 minMeters,
                 maxMeters
             )
@@ -215,7 +216,7 @@ open class PhysicsLigament(
     ) {
         this.length = offsetMeters
         this.lengthSupplier = Supplier<Double> {
-            (length + other.deltaAngle.radians * other.length * gearRatio).coerceIn(
+            (length + other.deltaAngle.radians * other.length / gearRatio).coerceIn(
                 minMeters,
                 maxMeters
             )
@@ -230,7 +231,7 @@ open class PhysicsLigament(
         this.angleSupplier = Supplier<Double> { degrees }
     }
 
-    open fun update(dt: Double) {
+    override fun update(dt: Double) {
         val prevAngle = angle
         val prevLength = angle
         angle = angleSupplier.get()
