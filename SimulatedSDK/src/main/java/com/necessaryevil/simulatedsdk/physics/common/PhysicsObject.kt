@@ -1,14 +1,11 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.physics.common
 
-import com.necessaryevil.simulatedsdk.hardware.SimulationObject
-import org.psilynx.psikit.Logger
 import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.mechanism.LoggedMechanismObject2d
 import org.psilynx.psikit.wpi.Color8Bit
 import org.psilynx.psikit.wpi.Rotation2d
 import org.psilynx.psikit.wpi.Translation2d
 import java.util.function.Supplier
-import kotlin.coroutines.EmptyCoroutineContext.fold
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.pow

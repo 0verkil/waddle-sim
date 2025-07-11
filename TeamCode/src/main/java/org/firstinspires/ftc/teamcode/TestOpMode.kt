@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
-import com.necessaryevil.simulatedsdk.hardware.DcMotorWrapper
-import com.necessaryevil.simulatedsdk.hardware.EmulatedFtcRobotControllerActivity
-import com.necessaryevil.simulatedsdk.hardware.EmulatedOpModeManagerNotifier
-import com.necessaryevil.simulatedsdk.hardware.SimulatedMotor
+import com.necessaryevil.simulatedsdk.ftc.DcMotorWrapper
+import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.HardwareMap

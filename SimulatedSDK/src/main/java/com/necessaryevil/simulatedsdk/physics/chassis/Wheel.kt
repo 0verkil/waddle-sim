@@ -1,9 +1,8 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.physics.chassis
 
+import com.necessaryevil.simulatedsdk.physics.common.PhysicsLigament
 import org.psilynx.psikit.wpi.Color8Bit
 import org.psilynx.psikit.wpi.Translation2d
-import java.util.function.Supplier
-import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sign
 

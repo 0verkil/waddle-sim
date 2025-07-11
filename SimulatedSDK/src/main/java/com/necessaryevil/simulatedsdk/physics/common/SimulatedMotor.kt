@@ -1,6 +1,7 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.physics.common
 
-import com.necessaryevil.simulatedsdk.hardware.SimulationObject
+import com.necessaryevil.simulatedsdk.physics.chassis.Chassis
+import com.necessaryevil.simulatedsdk.physics.chassis.MecanumWheel
 import org.ejml.simple.SimpleMatrix
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.psilynx.psikit.Logger
@@ -208,8 +209,8 @@ fun main() {
         leftBack,
         rightFront,
         rightBack,
-        frontalArea=0.1161288,
-        trackwidth=0.2
+        frontalArea = 0.1161288,
+        trackwidth = 0.2
     )
 
     val lf = SimulatedMotor.GOBILDA_435

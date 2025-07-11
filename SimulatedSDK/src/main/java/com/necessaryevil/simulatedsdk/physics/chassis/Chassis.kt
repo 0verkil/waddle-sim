@@ -1,6 +1,8 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.physics.chassis
 
-import com.necessaryevil.simulatedsdk.hardware.SimulationObject
+import com.necessaryevil.simulatedsdk.physics.common.PhysicsLigament
+import com.necessaryevil.simulatedsdk.physics.common.SimulationObject
+import com.necessaryevil.simulatedsdk.physics.common.radians
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.wpi.Pose2d
 import org.psilynx.psikit.wpi.Rotation2d

@@ -1,14 +1,14 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.ftc
 
+import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorController
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareDevice
-import com.qualcomm.robotcore.hardware.configuration.annotations.MotorType
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 import kotlin.math.PI
 
-class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor, val motorType: DcMotorWrapper.MotorType = DcMotorWrapper.MotorType.GENERIC) : DcMotor {
+class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor, val motorType: MotorType = MotorType.GENERIC) : DcMotor {
 
     var zpb: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
     var motorDirection: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
@@ -22,13 +22,13 @@ class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor, val motor
     companion object {
 
         val cpr: Map<MotorType, Double> = mapOf(
-            DcMotorWrapper.MotorType.GENERIC to 1.0,
-            DcMotorWrapper.MotorType.GOBILDA_435 to 384.5,
-            DcMotorWrapper.MotorType.GOBILDA_1150 to 145.1,
+            MotorType.GENERIC to 1.0,
+            MotorType.GOBILDA_435 to 384.5,
+            MotorType.GOBILDA_1150 to 145.1,
 
         )
 
-        fun getTicksFromMotorType(motorType: DcMotorWrapper.MotorType, radians: Double): Int {
+        fun getTicksFromMotorType(motorType: MotorType, radians: Double): Int {
             val rot = radians / (2.0 * PI)
             return (cpr[motorType]?.times(rot))?.toInt() ?: 0
         }

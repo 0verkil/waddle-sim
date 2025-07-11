@@ -1,4 +1,4 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.physics.common
 
 interface SimulationObject {
 

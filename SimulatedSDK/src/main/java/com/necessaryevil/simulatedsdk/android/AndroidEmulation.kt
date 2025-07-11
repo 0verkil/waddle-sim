@@ -1,4 +1,4 @@
-package com.necessaryevil.simulatedsdk.hardware
+package com.necessaryevil.simulatedsdk.android
 
 import android.content.BroadcastReceiver
 import android.content.ComponentName
