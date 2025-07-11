@@ -1,6 +1,6 @@
 package com.necessaryevil.simulatedsdk.hardware
 
-import com.necessaryevil.simulatedsdk.SimulationObject
+import com.necessaryevil.simulatedsdk.hardware.SimulationObject
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.mechanism.LoggedMechanismObject2d

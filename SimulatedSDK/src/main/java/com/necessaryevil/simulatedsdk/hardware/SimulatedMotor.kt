@@ -1,6 +1,6 @@
 package com.necessaryevil.simulatedsdk.hardware
 
-import com.necessaryevil.simulatedsdk.SimulationObject
+import com.necessaryevil.simulatedsdk.hardware.SimulationObject
 import org.ejml.simple.SimpleMatrix
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.psilynx.psikit.Logger
