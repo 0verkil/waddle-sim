@@ -1,57 +1,22 @@
 
 //
-// build.gradle in TeamCode
+// build.gradle in SimulatedSDK
 //
-// Most of the definitions for building your module reside in a common, shared
-// file 'build.common.gradle'. Being factored in this way makes it easier to
-// integrate updates to the FTC into your code. If you really need to customize
-// the build definitions, you can place those customizations in this file, but
-// please think carefully as to whether such customizations are really necessary
-// before doing so.
-
-
-// Custom definitions may go here
-
-// Include common definitions from above.
 
 plugins {
-    id "edu.wpi.first.GradleRIO" version "2025.3.1"
-    id 'edu.wpi.first.WpilibTools' version '2.1.0'
-
     id "com.diffplug.spotless" version "6.25.0"
 
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
-
-
-// #POLARCARRIED
-wpi.maven.useLocal = false
-wpi.maven.useDevelopment = true
-wpi.versions.wpilibVersion = '2025.+'
-wpi.versions.wpimathVersion = '2025.+'
-wpilibTools.deps.wpilibVersion = wpi.versions.wpilibVersion.get()
-
-def nativeConfigName = 'wpilibNatives'
-def nativeConfig = configurations.create(nativeConfigName)
-
-def nativeTasks = wpilibTools.createExtractionTasks {
-    configurationName = nativeConfigName
-}
-
-apply from: '../build.common.gradle'
-apply from: '../build.dependencies.gradle'
 
 android {
     namespace 'com.necessaryevil.simulatedsdk'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.necessaryevil.simulatedsdk"
         minSdk 24
         targetSdk 35
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -77,13 +42,19 @@ repositories {
 
 
 dependencies {
-    implementation wpilibTools.deps.wpilibJava("wpiutil")
-    implementation wpilibTools.deps.wpilibJava("wpimath")
-    implementation wpilibTools.deps.wpilibJava("wpiunits")
-    implementation wpilibTools.deps.wpilibJava("wpinet")
 
     implementation 'org.ejml:ejml-all:0.44.0'
     implementation('org.psilynx:psikit:0.0.3')
 
-    implementation group: "us.hebi.quickbuf", name: "quickbuf-runtime", version: wpi.versions.quickbufVersion.get();
+    implementation 'org.firstinspires.ftc:Inspection:10.2.0'
+    implementation 'org.firstinspires.ftc:Blocks:10.2.0'
+    implementation 'org.firstinspires.ftc:RobotCore:10.2.0'
+    implementation 'org.firstinspires.ftc:RobotServer:10.2.0'
+    implementation 'org.firstinspires.ftc:OnBotJava:10.2.0'
+    implementation 'org.firstinspires.ftc:Hardware:10.2.0'
+    implementation 'org.firstinspires.ftc:FtcCommon:10.2.0'
+    implementation 'org.firstinspires.ftc:Vision:10.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    implementation project(':FtcRobotController')
 }

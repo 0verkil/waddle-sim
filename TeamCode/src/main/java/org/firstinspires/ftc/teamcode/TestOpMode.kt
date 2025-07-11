@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.necessaryevil.simulatedsdk.Test;
 
 @TeleOp
 class TestOpMode : LinearOpMode() {
@@ -16,4 +15,8 @@ class TestOpMode : LinearOpMode() {
 
     }
 
+}
+
+fun main() {
+    println("test")
 }
