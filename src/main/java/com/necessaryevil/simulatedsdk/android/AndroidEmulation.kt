@@ -1,14 +1,6 @@
 package com.necessaryevil.simulatedsdk.android
 
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.IntentSender
-import android.content.ServiceConnection
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
@@ -33,7 +25,7 @@ import java.io.InputStream
 
 class EmulatedOpModeManagerNotifier(): OpModeManagerNotifier {
 
-    override fun registerListener(listener: OpModeManagerNotifier.Notifications?): OpMode? {
+    override fun registerListener(listener: OpModeManagerNotifier.Notifications?): OpMode {
         TODO("Not yet implemented")
     }
 

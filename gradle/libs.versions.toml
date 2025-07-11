@@ -1,0 +1,34 @@
+[versions]
+kotlin = "2.2.0"
+kotest = "5.9.1"
+android = "8.0.2"
+ftcsdk = "10.2.0"
+mathjaxPlugin = "2.2.0"
+ejml = "0.44.0"
+psikit = "0.0.3"
+
+[libraries]
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+ftcsdk-common = { module = "org.firstinspires.ftc:FtcCommon", version.ref = "ftcsdk" }
+ftcsdk-robotcore = { module = "org.firstinspires.ftc:RobotCore", version.ref = "ftcsdk" }
+ftcsdk-hardware = { module = "org.firstinspires.ftc:Hardware", version.ref = "ftcsdk" }
+mathjax-plugin = { module = "org.jetbrains.dokka:mathjax-plugin", version.ref = "mathjaxPlugin" }
+ejml = { module = "org.ejml:ejml-simple", version.ref = "ejml" }
+psikit = { module = "org.psilynx:psikit", version.ref = "psikit" }
+
+[bundles]
+kotest = ["kotest-runner-junit5", "kotest-assertions-core", "kotest-property"]
+ftcsdk = ["ftcsdk-common", "ftcsdk-robotcore", "ftcsdk-hardware"]
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android" }
+android-library = { id = "com.android.library", version.ref = "android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin" }

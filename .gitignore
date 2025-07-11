@@ -1,1 +1,13 @@
 /build
+.gradle
+.idea
+.kotlin
+.idea/AndroidProjectSystem.xml
+.idea/caches/deviceStreaming.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/gradle.xml
+.idea/migrations.xml
+.idea/misc.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
