@@ -1,36 +1,60 @@
-/**
- * Top-level build file for ftc_app project.
- *
- * It is extraordinarily rare that you will ever need to edit this file.
- */
 
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-    dependencies {
-        // Note for FTC Teams: Do not modify this yourself.
-        classpath 'com.android.tools.build:gradle:8.7.0'
+//
+// build.gradle in SimulatedSDK
+//
 
-        // this is ok to modify :)
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0"
-    }
+plugins {
+    id "com.diffplug.spotless" version "6.25.0"
+
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
-// This is now required because aapt2 has to be downloaded from the
-// google() repository beginning with version 3.2 of the Android Gradle Plugin
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        maven {
-            url = "https://mymaven.bylazar.com/releases"
+android {
+    namespace 'com.necessaryevil.simulatedsdk'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 35
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        maven { url = 'https://maven.brott.dev/' }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
     }
 }
 
 repositories {
-    mavenCentral()
+    maven { url 'https://repo.dairy.foundation/releases' }
+}
+
+
+dependencies {
+
+    implementation 'org.ejml:ejml-all:0.44.0'
+    implementation('org.psilynx:psikit:0.0.3')
+
+    implementation 'org.firstinspires.ftc:Inspection:10.2.0'
+    implementation 'org.firstinspires.ftc:Blocks:10.2.0'
+    implementation 'org.firstinspires.ftc:RobotCore:10.2.0'
+    implementation 'org.firstinspires.ftc:RobotServer:10.2.0'
+    implementation 'org.firstinspires.ftc:OnBotJava:10.2.0'
+    implementation 'org.firstinspires.ftc:Hardware:10.2.0'
+    implementation 'org.firstinspires.ftc:FtcCommon:10.2.0'
+    implementation 'org.firstinspires.ftc:Vision:10.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    implementation project(':FtcRobotController')
 }
