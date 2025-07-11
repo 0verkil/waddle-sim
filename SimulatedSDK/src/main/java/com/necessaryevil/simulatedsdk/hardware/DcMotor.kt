@@ -8,11 +8,10 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.MotorType
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 import kotlin.math.PI
 
-class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor) : DcMotor {
+class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor, val motorType: DcMotorWrapper.MotorType = DcMotorWrapper.MotorType.GENERIC) : DcMotor {
 
     var zpb: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
     var motorDirection: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
-    var motorType: DcMotorWrapper.MotorType = DcMotorWrapper.MotorType.GENERIC
 
     enum class MotorType {
         GOBILDA_435,
