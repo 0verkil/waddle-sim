@@ -1,41 +1,142 @@
 package com.necessaryevil.simulatedsdk.ftc
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import java.util.Queue
+import org.psilynx.psikit.Logger
 import java.util.Stack
 
 /**
  * Class to handle running simulations.
  * @param opMode For running a standalone opMode.
- * @param opModeSequence For running a combined set of an Auto and a TeleOp. Defaults to auto = 30s, teleop = 120s.
- * @param deltaMillis Time between simulation steps. Users should not generally modify this.
  * @param stopSeconds The number of seconds to run the standalone OpMode for. Negative seconds denotes running forever.
+ * @param deltaMillis Time between simulation steps. Users should not generally modify this.
  */
-class Simulation(opMode: OpMode? = null, opModeSequence: OpModeSequence? = null, val deltaMillis: Double = 1.0, stopSeconds: Double = -1.0) {
+class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMillis: Double = 1.0) {
 
-    val opModes = Stack<Pair<OpMode, Double>>()
-    val currentOpMode get() = opModes.peek().first
-    val currentTimeout get() = opModes.peek().second
+    /**
+     * Time since start of simulation, in seconds.
+     */
+    var currentSeconds = 0.0
+    var isStarted = false
+    var stopRequested = false
 
-    init {
-        if (opMode != null) {
-            opModes.add(Pair(opMode, stopSeconds))
-        } else if (opModeSequence != null) {
-            opModes.addAll(arrayListOf(Pair(opModeSequence.auto, 30.0), Pair(opModeSequence.teleOp, 120.0)))
+    fun run() {
+        // populate hardwaremap and telemetry with emulated instances
+        opMode.hardwareMap = SimulatedHardware.hardwareMap
+        opMode.telemetry = PsikitTelemetry(opMode)
+
+        if (opMode is LinearOpMode) {
+            opMode.runOpMode()
         } else {
-            error("opMode and opModeSequence cannot both be null.")
+            internalRunOpMode()
         }
     }
 
-    fun runNextOpMode() {
-
+    /**
+     * Equivalent to hitting the "play" button on your DS: sets `isStarted` to true.
+     */
+    fun startOpMode() {
+        isStarted = true
     }
 
-    fun run() {
+    /**
+     * Used for running OpModes as opposed to LinearOpModes.
+     */
+    private fun internalRunOpMode() {
+        // If user code in an iterative OpMode throws an exception at any point, no further callback
+        // methods will be called because this function will immediately exit.
 
+        // We expect this to take a negligible amount of time,
+        // so we need not update the simulation yet. This must actually be true!
+        opMode.init()
+        update()
+
+        while (!isStarted && !stopRequested) {
+            internalPreUserCode()
+            opMode.init_loop()
+            internalPostUserCode()
+            update()
+        }
+
+        if (isStarted) {
+            // We expect this to take a negligible amount of time,
+            // so we need not update the simulation yet. This must actually be true!
+            internalPreUserCode()
+            opMode.start()
+            internalPostUserCode()
+            update()
+
+            while (!stopRequested) {
+                internalPreUserCode()
+                opMode.loop()
+                internalPostUserCode()
+                update()
+            }
+        }
+
+        internalPreUserCode()
+        opMode.stop()
+        internalPostUserCode()
+    }
+
+    /**
+     * Emulates functionality of a real opmode. Updates simulation time and (TODO) gamepad data.
+     */
+    private fun internalPreUserCode() {
+        Logger.periodicBeforeUser()
+        opMode.time = currentSeconds
+    }
+
+    /**
+     * Emulates functionality of a real opmode. Updates telemetry.
+     */
+    private fun internalPostUserCode() {
+        Logger.periodicAfterUser(0.0, 0.0)
+        opMode.telemetry.update()
+    }
+
+    /**
+     * Handles keeping track of the set of all opmodes queued to run, as opposed to running a single one.
+     */
+    companion object {
+        var isSimulation = false
+
+        val simulations = Stack<Simulation>()
+        val simulation: Simulation? get() = simulations.peek()
+        val timeoutSeconds get() = simulation?.stopSeconds ?: -1.0
+        val time get() = simulation?.currentSeconds ?: 0.0
+        val deltaMillis get() = simulation?.deltaMillis ?: 0.001
+        var startTime = 0.0
+
+        /**
+         * Must be called every loop in a `LinearOpMode`.
+         */
+        fun update() {
+            // TODO: make the user code run at the frequency it's supposed to
+            if (isSimulation) {
+                SimulatedHardware.update(deltaMillis)
+
+                simulation?.currentSeconds += deltaMillis
+
+                if (time > timeoutSeconds) {
+                    simulation?.stopRequested = true
+                }
+            }
+        }
+
+        fun runNextSimulation() {
+            resetRuntime()
+
+            simulation?.run()
+            simulations.pop()
+        }
+
+        /**
+         * Emulation of `OpMode.resetRuntime()`.
+         */
+        fun resetRuntime() {
+            startTime = time
+        }
     }
 
 }
-
-data class OpModeSequence(val auto: OpMode, val teleOp: OpMode)

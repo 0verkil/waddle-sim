@@ -46,8 +46,10 @@ repositories {
 
 dependencies {
     implementation(libs.bundles.ftcsdk)
-    implementation(libs.psikit)
+    compileOnly(libs.psikit)
     implementation(libs.ejml)
+
+    implementation(kotlin("reflect"))
 
     testImplementation(libs.kotlin.reflect)
     testImplementation(libs.bundles.kotest)
