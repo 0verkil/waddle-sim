@@ -15,9 +15,6 @@ abstract class SimulatableOpMode : OpMode() {
 
 abstract class SimulatableLinearOpMode : LinearOpMode() {
 
-    var isStarted = false
-    var stopRequested = false
-
     // TODO: override OpModeManagerImpl so we get access to the functions we need
 
 }

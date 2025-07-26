@@ -6,6 +6,7 @@ ftcsdk = "10.2.0"
 mathjaxPlugin = "2.2.0"
 ejml = "0.44.0"
 psikit = "0.0.3"
+lwjgl = "2.9.3"
 
 [libraries]
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
@@ -19,10 +20,10 @@ mathjax-plugin = { module = "org.jetbrains.dokka:mathjax-plugin", version.ref = 
 ejml = { module = "org.ejml:ejml-simple", version.ref = "ejml" }
 psikit = { module = "org.psilynx:psikit", version.ref = "psikit" }
 
+
 [bundles]
 kotest = ["kotest-runner-junit5", "kotest-assertions-core", "kotest-property"]
 ftcsdk = ["ftcsdk-common", "ftcsdk-robotcore", "ftcsdk-hardware"]
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
