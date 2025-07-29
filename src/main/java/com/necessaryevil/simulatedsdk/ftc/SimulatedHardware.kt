@@ -48,6 +48,5 @@ object SimulatedHardware {
 
     fun update(dt: Double) {
         simulationObjects.forEach { it.update(dt) }
-        simulationObjects.filter { it is SimulatedMotor }.forEach { println((it as SimulatedMotor).rpm) }
     }
 }

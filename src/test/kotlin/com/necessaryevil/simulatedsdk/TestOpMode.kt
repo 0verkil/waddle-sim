@@ -6,6 +6,7 @@ import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorSimulated
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import io.kotest.core.spec.style.FunSpec
 import org.psilynx.psikit.Logger
@@ -15,7 +16,7 @@ import java.lang.Thread.sleep
 @TeleOp
 class TestOpMode : OpMode() {
 
-    val testMotor by lazy { hardwareMap.dcMotor.get("test") }
+    val testMotor: DcMotor by lazy { hardwareMap.dcMotor.get("test") }
 
     override fun init() {
 
