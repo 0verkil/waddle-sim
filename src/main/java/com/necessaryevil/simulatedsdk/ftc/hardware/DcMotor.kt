@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 import kotlin.math.PI
 
-class DcMotorWrapper(val port: Int, val internalMotor: SimulatedMotor, val motorType: MotorType = MotorType.GENERIC) : DcMotor {
+class DcMotorSimulated(val port: Int, val internalMotor: SimulatedMotor, val motorType: MotorType = MotorType.GENERIC) : DcMotor {
 
     var zpb: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
     var motorDirection: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD

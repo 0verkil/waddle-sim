@@ -26,6 +26,7 @@ open class PhysicsLigament(
     angle: Double = 0.0,
     lineWidth: Double = 10.0,
     color: Color8Bit = Color8Bit(235, 137, 52),
+    val efficiency: Double = 1.0,
     val isCircle: Boolean = false
 ) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color), SimulationObject {
 
@@ -120,11 +121,11 @@ open class PhysicsLigament(
     open val angularLoad: Double
         get() = centerOfMass.norm * G *
                 physicsObjects.fold(this.mass) { acc, x: PhysicsLigament -> acc + x.mass } * cos(
-            angle
+            angle / efficiency
         )
 
     open val linearForce: Double
-        get() = mass * G * sin(angle)
+        get() = mass * G * sin(angle) / efficiency
 
     open fun constrainAngleByMotor(
         other: SimulatedMotor,

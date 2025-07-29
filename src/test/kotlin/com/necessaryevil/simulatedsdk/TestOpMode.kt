@@ -1,6 +1,6 @@
 package com.necessaryevil.simulatedsdk
 
-import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorWrapper
+import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorSimulated
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -52,7 +52,7 @@ class TestSimulator : FunSpec( {
         val simMotor = SimulatedMotor.GOBILDA_435
         opmode.hardwareMap = HardwareMap(null, null)
         opmode.hardwareMap.dcMotor.put("test",
-            DcMotorWrapper(0, simMotor, DcMotorWrapper.MotorType.GOBILDA_435)
+            DcMotorSimulated(0, simMotor, DcMotorSimulated.MotorType.GOBILDA_435)
         )
 
         var elapsedTime = 0.0
