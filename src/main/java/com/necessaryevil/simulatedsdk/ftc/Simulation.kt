@@ -3,6 +3,7 @@ package com.necessaryevil.simulatedsdk.ftc
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.psilynx.psikit.Logger
+import org.psilynx.psikit.RLOGServer
 import java.lang.Thread.yield
 import java.util.Stack
 import kotlin.concurrent.thread
@@ -27,8 +28,6 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         opMode.hardwareMap = SimulatedHardware.hardwareMap
         opMode.telemetry = PsikitTelemetry(opMode)
 
-        Logger.setSimulation(true)
-
         // do opmode setup with opmode manager hijack
         SimulatedOpModeManagerImpl.activeOpMode = opMode
 
@@ -41,8 +40,10 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         }
 
         while (opModeThread.isAlive) {
-            SimulatedOpModeManagerImpl.startOpMode()
-            SimulatedHardware.update(deltaMillis)
+            if (!isStarted) {
+                SimulatedOpModeManagerImpl.startOpMode()
+            }
+            //SimulatedHardware.update(deltaMillis)
             Thread.sleep(5)
         }
     }
@@ -129,11 +130,12 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         fun update() {
             // TODO: make the user code run at the frequency it's supposed to
             if (isSimulation) {
-                SimulatedHardware.update(deltaMillis)
+                SimulatedHardware.update(deltaMillis / 1000.0)
 
-                simulation?.currentSeconds += deltaMillis
+                simulation?.currentSeconds += deltaMillis / 1000.0
 
-                if (time > timeoutSeconds) {
+                if (time > timeoutSeconds && timeoutSeconds > 0) {
+                    println("AAAH")
                     simulation?.stopRequested = true
                 }
             }
@@ -153,6 +155,17 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
 
         fun runNextSimulation() {
             resetRuntime()
+            isSimulation = true
+            Logger.setSimulation(true)
+            Logger.end()
+
+            // restart logger
+            val server = RLOGServer()
+            Logger.addDataReceiver(server)
+
+            Logger.setTimeSource { time }
+
+            Logger.start()
 
             simulation?.run()
             simulations.pop()

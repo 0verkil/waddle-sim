@@ -18,26 +18,15 @@ class TestOpMode : OpMode() {
     val testMotor by lazy { hardwareMap.dcMotor.get("test") }
 
     override fun init() {
-        val server = RLOGServer()
-        Logger.addDataReceiver(server)
+
         Logger.recordMetadata("opMode name", "Test OpMode")
-        Logger.start()
-        Logger.periodicAfterUser(0.0, 0.0)
-        Logger.start()
     }
 
     override fun loop() {
-        Logger.periodicBeforeUser()
 
         testMotor.power = 1.0
 
         Logger.recordOutput("Motor position (encoder ticks)", testMotor.currentPosition)
-
-        Logger.periodicAfterUser(0.0, 0.0)
-    }
-
-    override fun stop() {
-        Logger.end()
     }
 
 }

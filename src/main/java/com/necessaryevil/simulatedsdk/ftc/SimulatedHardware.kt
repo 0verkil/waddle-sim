@@ -14,6 +14,9 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import java.lang.reflect.GenericArrayType
 
+/**
+ * Class to handle simulation hardware updates. You must build out the hardwaremap and the hardware instances yourself.
+ */
 object SimulatedHardware {
 
     val hardwareMap: HardwareMap = HardwareMap(null, null)
@@ -45,5 +48,6 @@ object SimulatedHardware {
 
     fun update(dt: Double) {
         simulationObjects.forEach { it.update(dt) }
+        simulationObjects.filter { it is SimulatedMotor }.forEach { println((it as SimulatedMotor).rpm) }
     }
 }

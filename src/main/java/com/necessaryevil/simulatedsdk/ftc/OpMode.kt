@@ -13,6 +13,7 @@ import kotlin.reflect.full.createInstance
 import java.lang.reflect.Method
 
 /**
+ * Class that allows access to internal OpMode methods (start, stop, run).
  * Simulated OpModeManager that uses reflection to access package-private methods
  * without extending OpModeManagerImpl (which has native library dependencies).
  * ONLY USE THESE METHODS:
