@@ -3,7 +3,9 @@ package com.necessaryevil.simulatedsdk.ftc
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.psilynx.psikit.Logger
+import java.lang.Thread.yield
 import java.util.Stack
+import kotlin.concurrent.thread
 
 /**
  * Class to handle running simulations.
@@ -17,7 +19,7 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
      * Time since start of simulation, in seconds.
      */
     var currentSeconds = 0.0
-    var isStarted = false
+    val isStarted get() = SimulatedOpModeManagerImpl.opModeIsStarted as Boolean
     var stopRequested = false
 
     fun run() {
@@ -25,10 +27,23 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         opMode.hardwareMap = SimulatedHardware.hardwareMap
         opMode.telemetry = PsikitTelemetry(opMode)
 
-        if (opMode is LinearOpMode) {
-            opMode.runOpMode()
-        } else {
-            internalRunOpMode()
+        Logger.setSimulation(true)
+
+        // do opmode setup with opmode manager hijack
+        SimulatedOpModeManagerImpl.activeOpMode = opMode
+
+        val opModeThread = thread {
+            if (opMode is LinearOpMode) {
+                opMode.runOpMode()
+            } else {
+                internalRunOpMode()
+            }
+        }
+
+        while (opModeThread.isAlive) {
+            SimulatedOpModeManagerImpl.startOpMode()
+            SimulatedHardware.update(deltaMillis)
+            Thread.sleep(5)
         }
     }
 
@@ -36,7 +51,7 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
      * Equivalent to hitting the "play" button on your DS: sets `isStarted` to true.
      */
     fun startOpMode() {
-        isStarted = true
+        SimulatedOpModeManagerImpl.startOpMode()
     }
 
     /**
@@ -124,6 +139,18 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
             }
         }
 
+        fun addSimulation(opMode: OpMode, opModeType: OpModeType, deltaMillis: Double = 1.0) {
+            when (opModeType) {
+                OpModeType.AUTONOMOUS -> addSimulation(opMode, 30.0, deltaMillis)
+                OpModeType.TELEOP -> addSimulation(opMode, -1.0, deltaMillis)
+                OpModeType.OTHER -> addSimulation(opMode, -1.0, deltaMillis)
+            }
+        }
+
+        fun addSimulation(opMode: OpMode, stopSeconds: Double = -1.0, deltaMillis: Double = 1.0) {
+            this.simulations.add(Simulation(opMode, stopSeconds, deltaMillis))
+        }
+
         fun runNextSimulation() {
             resetRuntime()
 
@@ -137,6 +164,12 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         fun resetRuntime() {
             startTime = time
         }
+    }
+
+    enum class OpModeType {
+        AUTONOMOUS,
+        TELEOP,
+        OTHER
     }
 
 }

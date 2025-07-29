@@ -1,5 +1,7 @@
 package com.necessaryevil.simulatedsdk
 
+import com.necessaryevil.simulatedsdk.ftc.SimulatedHardware
+import com.necessaryevil.simulatedsdk.ftc.Simulation
 import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorSimulated
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -44,7 +46,7 @@ const val DELTA_TIME = 0.001
 
 class TestSimulator : FunSpec( {
 
-    test("simulate") {
+    /*test("simulate") {
         val opmode = TestOpMode()
 
         // emulate this stuff that doesn't matter
@@ -70,7 +72,16 @@ class TestSimulator : FunSpec( {
             Logger.recordOutput("True Motor Angle", simMotor.angle)
             Logger.recordOutput("True Motor Angular Velocity", simMotor.deltaAngle / DELTA_TIME)
         }
-    }
+    }*/
 
+    test("simulateWithSimulator") {
+        SimulatedHardware.addMotor("test", SimulatedMotor.GOBILDA_435, DcMotorSimulated.MotorType.GOBILDA_435)
+
+        val opmode = TestOpMode()
+        Simulation.addSimulation(opmode)
+
+        Simulation.runNextSimulation()
+
+    }
 
 })
