@@ -2,7 +2,7 @@
 kotlin = "2.2.0"
 kotest = "5.9.1"
 android = "8.0.2"
-ftcsdk = "10.2.0"
+ftcsdk = "10.3.0"
 mathjaxPlugin = "2.2.0"
 ejml = "0.44.0"
 psikit = "0.0.3"

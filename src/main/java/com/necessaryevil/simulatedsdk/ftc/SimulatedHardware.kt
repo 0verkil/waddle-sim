@@ -1,6 +1,6 @@
 package com.necessaryevil.simulatedsdk.ftc
 
-import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorSimulated
+import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedDcMotor
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.necessaryevil.simulatedsdk.physics.common.SimulationObject
 import com.qualcomm.robotcore.hardware.AnalogInput
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.I2cDevice
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import java.lang.reflect.GenericArrayType
 
 /**
  * Class to handle simulation hardware updates. You must build out the hardwaremap and the hardware instances yourself.
@@ -37,8 +36,8 @@ object SimulatedHardware {
 
     }
 
-    fun addMotor(name: String, motor: SimulatedMotor, motorType: DcMotorSimulated.MotorType = DcMotorSimulated.MotorType.GENERIC) {
-        addHardwareDevice(name, DcMotorSimulated(0, motor, motorType))
+    fun addMotor(name: String, motor: SimulatedMotor, motorType: SimulatedDcMotor.MotorType = SimulatedDcMotor.MotorType.GENERIC) {
+        addHardwareDevice(name, SimulatedDcMotor(0, motor, motorType))
         addSimulationObject(motor)
     }
 

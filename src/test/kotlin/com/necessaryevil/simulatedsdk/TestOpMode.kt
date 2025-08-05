@@ -2,16 +2,13 @@ package com.necessaryevil.simulatedsdk
 
 import com.necessaryevil.simulatedsdk.ftc.SimulatedHardware
 import com.necessaryevil.simulatedsdk.ftc.Simulation
-import com.necessaryevil.simulatedsdk.ftc.hardware.DcMotorSimulated
+import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedDcMotor
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.HardwareMap
 import io.kotest.core.spec.style.FunSpec
 import org.psilynx.psikit.Logger
-import org.psilynx.psikit.RLOGServer
-import java.lang.Thread.sleep
 
 @TeleOp
 class TestOpMode : OpMode() {
@@ -28,6 +25,7 @@ class TestOpMode : OpMode() {
         testMotor.power = 1.0
 
         Logger.recordOutput("Motor position (encoder ticks)", testMotor.currentPosition)
+
     }
 
 }
@@ -65,7 +63,7 @@ class TestSimulator : FunSpec( {
     }*/
 
     test("simulateWithSimulator") {
-        SimulatedHardware.addMotor("test", SimulatedMotor.GOBILDA_435, DcMotorSimulated.MotorType.GOBILDA_435)
+        SimulatedHardware.addMotor("test", SimulatedMotor.GOBILDA_435, SimulatedDcMotor.MotorType.GOBILDA_435)
 
         val opmode = TestOpMode()
         Simulation.addSimulation(opmode)
