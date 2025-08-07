@@ -1,8 +1,12 @@
 package com.necessaryevil.simulatedsdk.ftc
 
 import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedDcMotor
+import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedLynxModule
+import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedServo
+import com.necessaryevil.simulatedsdk.ftc.hardware.SimulatedVoltageSensor
 import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.necessaryevil.simulatedsdk.physics.common.SimulationObject
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
@@ -21,16 +25,24 @@ object SimulatedHardware {
     val hardwareMap: HardwareMap = HardwareMap(null, null)
     private val simulationObjects = arrayListOf<SimulationObject>()
 
+    init {
+        addHardwareDevice("Control Hub", SimulatedLynxModule(true)) // control hub
+        addHardwareDevice("Expansion Hub", SimulatedLynxModule(false)) // expansion hub
+        addHardwareDevice("Voltage Sensor", SimulatedVoltageSensor()) // voltage sensor
+    }
+
     inline fun <reified T : HardwareDevice> addHardwareDevice(deviceName: String, device: T) {
 
         when (device) {
             is DcMotor -> hardwareMap.dcMotor.put(deviceName, device)
+            is SimulatedServo -> { hardwareMap.servo.put(deviceName, device); addSimulationObject(device); }
             is Servo -> hardwareMap.servo.put(deviceName, device)
             is AnalogInput -> hardwareMap.analogInput.put(deviceName, device)
             is DigitalChannel -> hardwareMap.digitalChannel.put(deviceName, device)
             is I2cDeviceSynch -> hardwareMap.i2cDeviceSynch.put(deviceName, device)
             is I2cDevice -> hardwareMap.i2cDevice.put(deviceName, device)
             is VoltageSensor -> hardwareMap.voltageSensor.put(deviceName, device)
+            is LynxModule -> hardwareMap.put(deviceName, device)
             else -> hardwareMap.put(deviceName, device)
         }
 

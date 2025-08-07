@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.SerialNumber
 import kotlin.math.max
 
 /**
- * Simulated digital channel. INPUT mode does not work.
+ * Simulated digital channel. INPUT mode does not work. To modify signal, use `setState()`.
  */
 class SimulatedDigitalChannel : DigitalChannel {
     private var state: Boolean = false;
@@ -30,6 +30,7 @@ class SimulatedDigitalChannel : DigitalChannel {
         this.state = state
     }
 
+    @Deprecated("Deprecated in Java")
     override fun setMode(mode: DigitalChannelController.Mode?) {
         return
     }
@@ -60,7 +61,13 @@ class SimulatedDigitalChannel : DigitalChannel {
 
 }
 
-class SimulatedAnalogInput(var voltage: Double = 0.0, val maxVoltage: Double = 3.3) : AnalogInput(null, 0) {
+/**
+ * Simulated AnalogInput class. To modify measurement, set `voltage`.
+ */
+class SimulatedAnalogInput(
+    @get:JvmName("voltage") var voltage: Double = 0.0,
+    @get:JvmName("maxVoltage") val maxVoltage: Double = 3.3
+) : AnalogInput(null, 0) {
     override fun getVoltage(): Double {
         return voltage
     }

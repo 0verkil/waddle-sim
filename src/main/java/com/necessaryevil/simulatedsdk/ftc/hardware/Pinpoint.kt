@@ -32,6 +32,7 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
 
     var deviceStatus: Int = 0
         set(v) {field = v; Companion.deviceStatus.set(this, v);}
+    @get:JvmName("loopTime")
     var loopTime: Int = 0
         set(v) {field = v; Companion.loopTime.set(this, v);}
     var xEncoderValue: Int = 0
