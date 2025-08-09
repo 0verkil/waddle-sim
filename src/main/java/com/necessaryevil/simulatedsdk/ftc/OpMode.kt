@@ -103,6 +103,7 @@ object SimulatedOpModeManagerImpl {
      * falls back to start() if internalStart() is not available
      */
     fun callActiveOpModeStart() {
+        print("is it null? " + internalStartMethod == null)
         activeOpMode?.let { opMode ->
             try {
                 internalStartMethod?.invoke(opMode)// ?: println("AAAA")//opMode.start()
@@ -169,6 +170,12 @@ abstract class SimulatableOpMode : OpMode() {
 
 abstract class SimulatableLinearOpMode : LinearOpMode() {
 
-    // TODO: override OpModeManagerImpl so we get access to the functions we need
+    override fun getRuntime(): Double {
+        return Simulation.time
+    }
+
+    override fun resetRuntime() {
+        Simulation.resetRuntime()
+    }
 
 }

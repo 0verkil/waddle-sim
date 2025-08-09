@@ -1,11 +1,13 @@
 package com.necessaryevil.simulatedsdk.ftc.hardware
 
+import com.necessaryevil.simulatedsdk.physics.chassis.MecanumDrivetrain
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.lynx.LynxUsbDevice
 import com.qualcomm.hardware.lynx.LynxUsbDeviceImpl
 import com.qualcomm.hardware.lynx.commands.LynxMessage
 import com.qualcomm.robotcore.eventloop.SyncdDevice
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.LynxModuleDescription
 import com.qualcomm.robotcore.hardware.LynxModuleMetaList
 import com.qualcomm.robotcore.hardware.VoltageSensor
@@ -14,8 +16,16 @@ import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice
 import com.qualcomm.robotcore.hardware.usb.RobotUsbModule
 import com.qualcomm.robotcore.util.SerialNumber
 import org.firstinspires.ftc.robotcore.external.Consumer
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation
+import org.firstinspires.ftc.robotcore.external.navigation.Quaternion
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.robotcore.internal.network.RobotCoreCommandList
 import org.firstinspires.ftc.robotcore.internal.ui.ProgressParameters
+import org.psilynx.psikit.wpi.Rotation2d
 import java.util.concurrent.TimeUnit
 
 class SimulatedLynxModule(isControlHub: Boolean) : LynxModule(SimulatedLynxUsbDevice(), 0, isControlHub, true) {
@@ -276,6 +286,65 @@ class SimulatedVoltageSensor : VoltageSensor {
 
     override fun resetDeviceConfigurationForOpMode() {
         TODO("Not yet implemented")
+    }
+
+    override fun close() {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class SimulatedIMU(val drive: MecanumDrivetrain) : IMU {
+
+    private var yawOffset = Rotation2d()
+
+    override fun initialize(parameters: IMU.Parameters?): Boolean {
+        // i don't care!!
+        return true
+    }
+
+    override fun resetYaw() {
+        yawOffset = drive.pose.rotation.times(-1.0)
+    }
+
+    override fun getRobotYawPitchRollAngles(): YawPitchRollAngles? {
+        return YawPitchRollAngles(AngleUnit.RADIANS, drive.pose.rotation.radians + yawOffset.radians, 0.0, 0.0, 0)
+    }
+
+    override fun getRobotOrientation(
+        reference: AxesReference?,
+        order: AxesOrder?,
+        angleUnit: AngleUnit?
+    ): Orientation? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRobotOrientationAsQuaternion(): Quaternion? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRobotAngularVelocity(angleUnit: AngleUnit?): AngularVelocity? {
+        return AngularVelocity(AngleUnit.RADIANS, 0.0f, 0.0f, drive.velocity.rotation.radians.toFloat(), 0)
+    }
+
+    override fun getManufacturer(): HardwareDevice.Manufacturer? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getDeviceName(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getConnectionInfo(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getVersion(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun resetDeviceConfigurationForOpMode() {
+        
     }
 
     override fun close() {

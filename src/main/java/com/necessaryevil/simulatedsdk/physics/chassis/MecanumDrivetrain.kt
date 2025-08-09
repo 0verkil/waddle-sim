@@ -78,10 +78,10 @@ class MecanumDrivetrain(
             val current = ((voltage - backEmf) / motorResistance).coerceIn(-20.0, 20.0)  // 20A current limit
             val motorTorque = motor.kMotor * current * efficiency
             wheelTorques[i] = (motorTorque * gearRatio).coerceIn(-maxMotorTorque, maxMotorTorque)
-            Logger.recordOutput("Debug/Motor $i Current", current)
+            /*Logger.recordOutput("Debug/Motor $i Current", current)
             Logger.recordOutput("Debug/Motor $i Torque", motorTorque)
             Logger.recordOutput("Debug/$i Back EMF", backEmf)
-            Logger.recordOutput("Debug/$i Max Torque", maxMotorTorque)
+            Logger.recordOutput("Debug/$i Max Torque", maxMotorTorque)*/
         }
         
         // Step 2: Convert wheel torques to forces
@@ -172,7 +172,7 @@ class MecanumDrivetrain(
         updateConnectedMotors(dt)
         
         // Logging
-        Logger.recordOutput("SimpleDrivetrain/Robot Pose", pose)
+        /*Logger.recordOutput("SimpleDrivetrain/Robot Pose", pose)
         Logger.recordOutput("SimpleDrivetrain/Robot Velocity", velocity.translation.norm)
         Logger.recordOutput("SimpleDrivetrain/Robot Angular Velocity", velocity.rotation.degrees)
         Logger.recordOutput("SimpleDrivetrain/Robot Angular Acceleration", accelAngular)
@@ -183,7 +183,7 @@ class MecanumDrivetrain(
         for (i in 0..3) {
             Logger.recordOutput("SimpleDrivetrain/Wheel $i Torque", wheelTorques[i])
             Logger.recordOutput("SimpleDrivetrain/Wheel $i Speed", getCurrentWheelSpeed(i))
-        }
+        }*/
     }
     
     private fun getCurrentWheelSpeed(wheelIndex: Int): Double {

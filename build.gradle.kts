@@ -146,3 +146,9 @@ dependencies {
     implementation("org.hid4java:hid4java:0.8.0")
 
 }
+
+tasks.withType<Test> {
+    this.testLogging {
+        this.showStandardStreams = true
+    }
+}

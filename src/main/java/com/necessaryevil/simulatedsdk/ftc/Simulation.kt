@@ -2,6 +2,7 @@ package com.necessaryevil.simulatedsdk.ftc
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.Gamepad
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.RLOGServer
 import java.lang.Thread.yield
@@ -28,6 +29,10 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
         opMode.hardwareMap = SimulatedHardware.hardwareMap
         opMode.telemetry = PsikitTelemetry(opMode)
 
+        // populate gamepads, currently no data updates
+        opMode.gamepad1 = Gamepad()
+        opMode.gamepad2 = Gamepad()
+
         // do opmode setup with opmode manager hijack
         SimulatedOpModeManagerImpl.activeOpMode = opMode
 
@@ -43,8 +48,7 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
             if (!isStarted) {
                 SimulatedOpModeManagerImpl.startOpMode()
             }
-            //SimulatedHardware.update(deltaMillis)
-            Thread.sleep(5)
+            Thread.sleep(10)
         }
     }
 
@@ -119,25 +123,41 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
 
         val simulations = Stack<Simulation>()
         val simulation: Simulation? get() = simulations.peek()
+
         val timeoutSeconds get() = simulation?.stopSeconds ?: -1.0
         val time get() = simulation?.currentSeconds ?: 0.0
         val deltaMillis get() = simulation?.deltaMillis ?: 0.001
+
+        var userPeriodic: Runnable = Runnable { }
+
         var startTime = 0.0
 
         /**
          * Must be called every loop in a `LinearOpMode`.
          */
+        @Synchronized
         fun update() {
             // TODO: make the user code run at the frequency it's supposed to
             if (isSimulation) {
-                SimulatedHardware.update(deltaMillis / 1000.0)
 
-                simulation?.currentSeconds += deltaMillis / 1000.0
+                for (i in 0..5) {
+                    SimulatedHardware.update(deltaMillis / 1000.0)
 
-                if (time > timeoutSeconds && timeoutSeconds > 0) {
-                    println("AAAH")
-                    simulation?.stopRequested = true
+                    simulation?.currentSeconds += deltaMillis / 1000.0
+
+                    if (time > timeoutSeconds && timeoutSeconds > 0) {
+                        simulation?.stopRequested = true
+                    }
                 }
+
+                try {
+                    Thread.sleep( (deltaMillis * 10.0).toLong() )
+                } catch (e: Exception) {
+
+                }
+
+                userPeriodic.run()
+
             }
         }
 
@@ -153,7 +173,7 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
             this.simulations.add(Simulation(opMode, stopSeconds, deltaMillis))
         }
 
-        fun runNextSimulation() {
+        fun runNextSimulation(periodic: Runnable = Runnable { }) {
             resetRuntime()
             isSimulation = true
             Logger.setSimulation(true)
@@ -166,6 +186,8 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
             Logger.setTimeSource { time }
 
             Logger.start()
+
+            this.userPeriodic = periodic
 
             simulation?.run()
             simulations.pop()

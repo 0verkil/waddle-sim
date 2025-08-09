@@ -16,16 +16,21 @@ class SimulatedServo(
 
     private var position: Double = initialDegrees
     private var targetPosition: Double = initialDegrees
-    private var minScaleDegrees = 0.0
-    private var maxScaleDegrees = 0.0
+    private var minScaleDegrees = minDegrees
+    private var maxScaleDegrees = maxDegrees
     private var direction = Servo.Direction.FORWARD
 
-    private val invertForDirection = { t: Double -> if (direction == Servo.Direction.FORWARD) 1.0 - t else t}
+    private val invertForDirection = { t: Double -> if (direction == Servo.Direction.FORWARD) t else 1.0 - t}
     private val lerpServoRange = { t: Double -> lerp(minDegrees, maxDegrees, invertForDirection(t)) }
     private val lerpScaledServoRange = { t: Double -> lerp(minScaleDegrees, maxScaleDegrees, invertForDirection(t)) }
 
     private val antilerpScaledServoRange =
         { k: Double -> invertForDirection(antilerp(minScaleDegrees, maxScaleDegrees, k)) }
+
+    /**
+     * Simulation-only method for servo-based sensors. Outputs degrees.
+     */
+    fun getTruePosition() = position
 
     override fun getController(): ServoController? {
         TODO("Not yet implemented")

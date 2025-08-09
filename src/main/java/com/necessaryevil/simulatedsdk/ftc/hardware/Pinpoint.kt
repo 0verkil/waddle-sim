@@ -1,6 +1,7 @@
 package com.necessaryevil.simulatedsdk.ftc.hardware
 
 import com.necessaryevil.simulatedsdk.physics.chassis.MecanumDrivetrain
+import com.necessaryevil.simulatedsdk.physics.common.SimulatedMotor
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import org.ejml.data.DMatrix1Row
 import org.ejml.data.DMatrixRMaj
@@ -14,21 +15,11 @@ import org.psilynx.psikit.wpi.Pose2d
 import org.psilynx.psikit.wpi.Rotation2d
 import kotlin.random.Random
 
-class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinpointDriver(null, false) {
+fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.INCH), this.getY(DistanceUnit.INCH),
+    Rotation2d(this.getHeading(AngleUnit.RADIANS)))
 
-    init {
-        // cursed scope bypass ft. reflection
-        GoBildaPinpointDriver::class.java.getDeclaredField("deviceStatus").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("loopTime").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("xEncoderValue").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("yEncoderValue").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("xPosition").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("yPosition").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("hOrientation").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("xVelocity").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("yVelocity").apply { isAccessible = true }
-        GoBildaPinpointDriver::class.java.getDeclaredField("hVelocity").apply { isAccessible = true }
-    }
+class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinpointDriver(
+    EmulatedI2cDeviceSynch(), false) {
 
     var deviceStatus: Int = 0
         set(v) {field = v; Companion.deviceStatus.set(this, v);}
@@ -40,17 +31,17 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
     var yEncoderValue: Int = 0
         set(v) {field = v; Companion.yEncoderValue.set(this, v);}
     var xPosition: Double = 0.0
-        set(v) {field = v; Companion.xPosition.set(this, v);}
+        set(v) {field = v; Companion.xPosition.set(this, v.toFloat());}
     var yPosition: Double = 0.0
-        set(v) {field = v; Companion.yPosition.set(this, v);}
+        set(v) {field = v; Companion.yPosition.set(this, v.toFloat());}
     var hOrientation: Double = 0.0
-        set(v) {field = v; Companion.hOrientation.set(this, v);}
+        set(v) {field = v; Companion.hOrientation.set(this, v.toFloat());}
     var xVelocity: Double = 0.0
-        set(v) {field = v; Companion.xVelocity.set(this, v);}
+        set(v) {field = v; Companion.xVelocity.set(this, v.toFloat());}
     var yVelocity: Double = 0.0
-        set(v) {field = v; Companion.yVelocity.set(this, v);}
+        set(v) {field = v; Companion.yVelocity.set(this, v.toFloat());}
     var hVelocity: Double = 0.0
-        set(v) {field = v; Companion.hVelocity.set(this, v);}
+        set(v) {field = v; Companion.hVelocity.set(this, v.toFloat());}
 
     private var offset: Pose2D = Pose2D(DistanceUnit.MM, 0.0, 0.0, AngleUnit.RADIANS, 0.0)
 
@@ -104,6 +95,7 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
     }
 
     companion object {
+
         val deviceStatus = GoBildaPinpointDriver::class.java.getDeclaredField("deviceStatus")
         val loopTime = GoBildaPinpointDriver::class.java.getDeclaredField("loopTime")
         val xEncoderValue = GoBildaPinpointDriver::class.java.getDeclaredField("xEncoderValue")
@@ -114,6 +106,20 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
         val xVelocity = GoBildaPinpointDriver::class.java.getDeclaredField("xVelocity")
         val yVelocity = GoBildaPinpointDriver::class.java.getDeclaredField("yVelocity")
         val hVelocity = GoBildaPinpointDriver::class.java.getDeclaredField("hVelocity")
+
+        init {
+            // cursed scope bypass ft. reflection
+            deviceStatus.apply { isAccessible = true }
+            loopTime.apply { isAccessible = true }
+            xEncoderValue.apply { isAccessible = true }
+            yEncoderValue.apply { isAccessible = true }
+            xPosition.apply { isAccessible = true }
+            yPosition.apply { isAccessible = true }
+            hOrientation.apply { isAccessible = true }
+            xVelocity.apply { isAccessible = true }
+            yVelocity.apply { isAccessible = true }
+            hVelocity.apply { isAccessible = true }
+        }
     }
 
 }
