@@ -49,12 +49,12 @@ class SimulatedMotor(
     /**
      * Minimum angle of the motor. Motor should stall if it hits here, but it's not modelled.
      */
-    var minAngle = Double.MIN_VALUE
+    var minAngle = Double.NEGATIVE_INFINITY
 
     /**
      * Maximum angle of the motor. Motor should stall if it hits here, but it's not modelled.
      */
-    var maxAngle = Double.MAX_VALUE
+    var maxAngle = Double.POSITIVE_INFINITY
 
     /**
      * State matrix, aka A.
@@ -147,6 +147,10 @@ class SimulatedMotor(
 
         val prevAngle = angle
 
+        if (power.isNaN()) {
+            power = 0.0
+        }
+
         // clamp power
         if (abs(power) > 1.0) {
             power = sign(power) * 1.0
@@ -163,11 +167,6 @@ class SimulatedMotor(
         )
         deltaAngle = angle - prevAngle
 
-        // compensate for state limits
-        if (state.get(2) < 0) {
-            state.set(2, 0.0)
-        }
-
         state.set(0, state.get(0).coerceIn(minAngle, maxAngle))
     }
 
@@ -180,7 +179,7 @@ class SimulatedMotor(
     }
 
     companion object {
-        val GOBILDA_435 get() = SimulatedMotor(0.025, 0.000109, 0.256, 1.30434782609, 0.01)
+        val GOBILDA_435 get() = SimulatedMotor(0.005, 0.000109, 0.256, 1.30434782609, 0.01)
         val GOBILDA_1150
             get() = SimulatedMotor(
                 0.005,

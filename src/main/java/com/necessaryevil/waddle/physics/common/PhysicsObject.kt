@@ -123,23 +123,22 @@ open class PhysicsLigament(
     open val angularLoad: Double
         get() = centerOfMass.norm * G *
                 physicsObjects.fold(this.mass) { acc, x: PhysicsLigament -> acc + x.mass } * cos(
-            angle / efficiency
-        )
+            angle.radians) / efficiency
 
     open val linearForce: Double
-        get() = mass * G * sin(angle) / efficiency
+        get() = mass * G * sin(angle.radians) / efficiency
 
     open fun constrainAngleByMotors(
-        others: Array<out SimulatedMotor>,
         offsetDegrees: Double = 0.0,
         minDegrees: Double = Double.NEGATIVE_INFINITY,
         maxDegrees: Double = Double.POSITIVE_INFINITY,
-        gearRatio: Double = 1.0
+        gearRatio: Double = 1.0,
+        vararg others: SimulatedMotor,
     ) {
 
         // the angles of the other motors should all match, so we just take 1 and run with it
         this.angleSupplier =
-            Supplier<Double> { (others[0].angle / gearRatio + offsetDegrees) }
+            Supplier<Double> { (others[0].angle.degrees / gearRatio + offsetDegrees) }
 
         for (other in others) {
             other.minAngle = minDegrees.radians * gearRatio
@@ -151,16 +150,6 @@ open class PhysicsLigament(
         }
     }
 
-    open fun constrainAngleByMotors(
-        vararg others: SimulatedMotor,
-        offsetDegrees: Double = 0.0,
-        minDegrees: Double = Double.NEGATIVE_INFINITY,
-        maxDegrees: Double = Double.POSITIVE_INFINITY,
-        gearRatio: Double = 1.0
-    ) {
-        constrainAngleByMotors(others, offsetDegrees, minDegrees, maxDegrees, gearRatio)
-    }
-
     open fun constrainAngleByMotor(
         other: SimulatedMotor,
         offsetDegrees: Double = 0.0,
@@ -168,7 +157,7 @@ open class PhysicsLigament(
         maxDegrees: Double = Double.POSITIVE_INFINITY,
         gearRatio: Double = 1.0
     ) {
-        constrainAngleByMotors(arrayOf(other), offsetDegrees, minDegrees, maxDegrees, gearRatio)
+        constrainAngleByMotors(offsetDegrees=offsetDegrees, minDegrees=minDegrees, maxDegrees=maxDegrees, gearRatio=gearRatio, other)
     }
 
     fun constrainAngleByAngle(

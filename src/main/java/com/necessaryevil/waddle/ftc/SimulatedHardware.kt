@@ -48,9 +48,10 @@ object SimulatedHardware {
 
     }
 
-    fun addMotor(name: String, motor: SimulatedMotor, motorType: SimulatedDcMotor.MotorType = SimulatedDcMotor.MotorType.GENERIC) {
+    fun addMotor(name: String, motor: SimulatedMotor, motorType: SimulatedDcMotor.MotorType = SimulatedDcMotor.MotorType.GENERIC): SimulatedMotor {
         addHardwareDevice(name, SimulatedDcMotor(0, motor, motorType))
         addSimulationObject(motor)
+        return motor
     }
 
     fun addSimulationObject(obj: SimulationObject) {
