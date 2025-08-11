@@ -21,7 +21,8 @@ repositiories {
 dependencies {
     // Add the below 2 lines in addition to whatever else is in your dependencies block.
     implementation "com.necessaryevil.waddle:version"
-    implementation ""org.psilynx:psikit:0.0.3" // You can use whichever version of PsiKit you prefer, but having it is highly recommended. If you aren't sure, copy what's here.
+    // You can use whichever version of PsiKit you prefer, but having it is highly recommended. If you aren't sure, copy what's here.
+    implementation "org.psilynx:psikit:0.0.3" 
 }
 ```
 
@@ -66,7 +67,8 @@ To run any given OpMode, use the following code:
 Java:
 
 ```java
-Simulation.Companion.addSimulation(new ExampleOpMode(), 30); // The first argument is the OpMode you wish to run, and the second argument is the duration.
+// The first argument is the OpMode you wish to run, and the second argument is the duration.
+Simulation.Companion.addSimulation(new ExampleOpMode(), 30);
 
 Simulation.Companion.runNextSimulation();
 ```
