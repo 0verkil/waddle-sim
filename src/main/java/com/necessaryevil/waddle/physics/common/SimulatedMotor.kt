@@ -27,14 +27,14 @@ import kotlin.math.sign
 /**
  * Simulated motor class. Control equations: https://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SystemModeling
  *
- * @param internalMoi: Moment of inertia of the motor, in kgm^2.
+ * @param moi: Moment of inertia of the motor, in kgm^2.
  * @param kFriction: Viscous friction constant, in Nms.
  * @param kMotor: Represents both the electromotive force constant (V/rad/s) and the torque constant (Nm/Amp).
  * @param resistance: Electrical resistance, in ohms.
  * @param inductance: Electrical inductance, in H (Henry).
  */
 class SimulatedMotor(
-    val internalMoi: Double,
+    val moi: Double,
     val kFriction: Double,
     val kMotor: Double,
     val resistance: Double,
@@ -79,7 +79,7 @@ class SimulatedMotor(
      */
     var power = 0.0
 
-    val disturbanceMatrix = SimpleMatrix(doubleArrayOf(0.0, -1.0 / internalMoi, 0.0))
+    val disturbanceMatrix = SimpleMatrix(doubleArrayOf(0.0, -1.0 / moi, 0.0))
 
     /**
      * The torque resisting the motor. In units of Nm.
@@ -90,16 +90,6 @@ class SimulatedMotor(
      * Dynamic load modeling. In units of Nm.
      */
     val loadInputs: ArrayList<DoubleSupplier> = ArrayList()
-
-    /**
-     * Dynamic moment of inertia modeling. In units of kgm^2.
-     */
-    val moiInputs: ArrayList<DoubleSupplier> = ArrayList()
-
-    /**
-     * True moi of the motor.
-     */
-    val moi get() = moiInputs.fold(internalMoi) { acc, x -> x.asDouble + acc }
 
     val rpm: Double get() = outputMatrix.mult(state).get(1, 0)
 
@@ -130,8 +120,8 @@ class SimulatedMotor(
 
     init {
         stateMatrix.set(0, 1, 1.0)
-        stateMatrix.set(1, 1, -kFriction / internalMoi)
-        stateMatrix.set(1, 2, kMotor / internalMoi)
+        stateMatrix.set(1, 1, -kFriction / moi)
+        stateMatrix.set(1, 2, kMotor / moi)
         stateMatrix.set(2, 1, -kMotor / inductance)
         stateMatrix.set(2, 2, -resistance / inductance)
         outputMatrix.set(1, 1, 30.0 / PI)
@@ -172,10 +162,6 @@ class SimulatedMotor(
 
     fun addLoad(load: DoubleSupplier) {
         loadInputs.add(load)
-    }
-
-    fun addMoi(moi: DoubleSupplier) {
-        moiInputs.add(moi)
     }
 
     companion object {

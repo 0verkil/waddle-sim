@@ -50,6 +50,10 @@ open class PhysicsLigament(
     var linearVelocity: Double = 0.0
 
     val physicsObjects: ArrayList<PhysicsLigament> = ArrayList()
+
+    /**
+     * Used to simulate gravity.
+     */
     val centerOfMass: Translation2d
         get() {
             var centerOfMass = Translation2d()
@@ -79,34 +83,10 @@ open class PhysicsLigament(
             return centerOfMass
         }
 
-    // array of (moi, mass)
-    val moiPoses: ArrayList<Pair<Translation2d, Double>> get() {
-        // get position of mois of children
-        val out: ArrayList<Pair<Translation2d, Double>> = arrayListOf()
 
-        val ligamentEnd = Translation2d(this.length, Rotation2d.fromDegrees(angle))
-        physicsObjects.forEach {
-            // for every pose: switch to coordinate frame relative to end of segment
-            out.addAll(
-                it.moiPoses.map { Pair(it.first.rotateBy(Rotation2d.fromDegrees(angle)).plus(ligamentEnd), it.second) }
-            )
-        }
-
-        // append our own moi
-        if (isCircle) {
-            // if it's a circle, moi at (0, 0)
-            out.add(Pair(Translation2d(), mass))
-        } else {
-            // otherwise, moi at end of segment
-            out.add(Pair(ligamentEnd, mass))
-        }
-        return out
-    }
-
-    val moi: Double
-        get() = moiPoses.fold(0.0) {acc, x -> acc + x.second * x.first.norm.pow(2)}
-
-
+    /**
+     * Mass of the overall mechanism, not just this ligament.
+     */
     val mechanismMass: Double get() {
         var mass = this.mass
 
@@ -125,6 +105,9 @@ open class PhysicsLigament(
                 physicsObjects.fold(this.mass) { acc, x: PhysicsLigament -> acc + x.mass } * cos(
             angle.radians) / efficiency
 
+    /**
+     * Used to compute gravity for linear mechanisms.
+     */
     open val linearForce: Double
         get() = mass * G * sin(angle.radians) / efficiency
 
@@ -146,7 +129,6 @@ open class PhysicsLigament(
 
             // distribute load across n motors
             other.addLoad { this.angularLoad / others.size }
-            other.addMoi { this.moi / others.size }
         }
     }
 
