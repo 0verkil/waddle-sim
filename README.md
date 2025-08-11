@@ -68,9 +68,7 @@ Java:
 ```java
 Simulation.Companion.addSimulation(new ExampleOpMode(), 30); // The first argument is the OpMode you wish to run, and the second argument is the duration.
 
-        Simulation.Companion.
-
-runNextSimulation();
+Simulation.Companion.runNextSimulation();
 ```
 
 Kotlin:
