@@ -1,6 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.java
 
 plugins {
     id("com.android.library") version libs.versions.android
@@ -11,7 +10,7 @@ group = "me.zharel.hermes"
 version = "1.0-SNAPSHOT"
 
 android {
-    namespace = "com.necessaryevil.simulatedsdk"
+    namespace = "com.necessaryevil.waddle"
     //noinspection GradleDependency
     compileSdk = 33
 
