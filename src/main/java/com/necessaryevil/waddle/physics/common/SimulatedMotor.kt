@@ -19,6 +19,8 @@ import java.util.function.Supplier
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sign
 
@@ -40,9 +42,19 @@ class SimulatedMotor(
 ) : SimulationObject {
 
     /**
-     * State vector: [angular position, angular velocity, current].
+     * State vector: [angular position (rad), angular velocity (rad/s, current].
      */
     var state = SimpleMatrix(3, 1)
+
+    /**
+     * Minimum angle of the motor. Motor should stall if it hits here, but it's not modelled.
+     */
+    var minAngle = Double.MIN_VALUE
+
+    /**
+     * Maximum angle of the motor. Motor should stall if it hits here, but it's not modelled.
+     */
+    var maxAngle = Double.MAX_VALUE
 
     /**
      * State matrix, aka A.
@@ -155,6 +167,8 @@ class SimulatedMotor(
         if (state.get(2) < 0) {
             state.set(2, 0.0)
         }
+
+        state.set(0, state.get(0).coerceIn(minAngle, maxAngle))
     }
 
     fun addLoad(load: DoubleSupplier) {

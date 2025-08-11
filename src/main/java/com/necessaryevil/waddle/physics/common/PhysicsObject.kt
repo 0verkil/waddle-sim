@@ -8,6 +8,8 @@ import org.psilynx.psikit.wpi.Translation2d
 import java.util.function.Supplier
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 
@@ -127,6 +129,38 @@ open class PhysicsLigament(
     open val linearForce: Double
         get() = mass * G * sin(angle) / efficiency
 
+    open fun constrainAngleByMotors(
+        others: Array<out SimulatedMotor>,
+        offsetDegrees: Double = 0.0,
+        minDegrees: Double = Double.NEGATIVE_INFINITY,
+        maxDegrees: Double = Double.POSITIVE_INFINITY,
+        gearRatio: Double = 1.0
+    ) {
+
+        // the angles of the other motors should all match, so we just take 1 and run with it
+        this.angleSupplier =
+            Supplier<Double> { (others[0].angle / gearRatio + offsetDegrees) }
+
+        for (other in others) {
+            other.minAngle = minDegrees.radians * gearRatio
+            other.maxAngle = maxDegrees.radians * gearRatio
+
+            // distribute load across n motors
+            other.addLoad { this.angularLoad / others.size }
+            other.addMoi { this.moi / others.size }
+        }
+    }
+
+    open fun constrainAngleByMotors(
+        vararg others: SimulatedMotor,
+        offsetDegrees: Double = 0.0,
+        minDegrees: Double = Double.NEGATIVE_INFINITY,
+        maxDegrees: Double = Double.POSITIVE_INFINITY,
+        gearRatio: Double = 1.0
+    ) {
+        constrainAngleByMotors(others, offsetDegrees, minDegrees, maxDegrees, gearRatio)
+    }
+
     open fun constrainAngleByMotor(
         other: SimulatedMotor,
         offsetDegrees: Double = 0.0,
@@ -134,11 +168,7 @@ open class PhysicsLigament(
         maxDegrees: Double = Double.POSITIVE_INFINITY,
         gearRatio: Double = 1.0
     ) {
-        this.angle = offsetDegrees
-        this.angleSupplier =
-            Supplier<Double> { (angle + Math.toDegrees(other.deltaAngle) / gearRatio).coerceIn(minDegrees, maxDegrees) }
-        other.addLoad { this.angularLoad }
-        other.addMoi { this.moi }
+        constrainAngleByMotors(arrayOf(other), offsetDegrees, minDegrees, maxDegrees, gearRatio)
     }
 
     fun constrainAngleByAngle(
