@@ -4,7 +4,16 @@
 codebase! Waddle allows you to simulate and test your robot, whether it hasn't even been built yet
 or you're trying to test a change remotely.
 
+## Usage Disclaimer
+
+**Waddle** is abandonware. Although the developer (me!) is still active, I am under no obligation to fix bugs, merge pull requests, or provide assistance.
+This is so that I do not lose my sanity during the season trying to help people. Feel free to contact me with bugs, but just know that there is a possibility
+that I will not respond.
+
 # Installation
+
+## please do not try this installation process right now, if you really care then clone the repo and add it as a local dependency (don't @ me if you don't know how to do this, just wait)
+*These installation instructions do not yet work. Please wait, like, a week.*
 
 In your TeamCode `build.gradle`, insert the following lines:
 
