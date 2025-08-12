@@ -1,5 +1,6 @@
 package com.necessaryevil.waddle.physics.common
 
+import com.necessaryevil.waddle.ftc.hardware.SimulatedServo
 import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.mechanism.LoggedMechanismObject2d
 import org.psilynx.psikit.wpi.Color8Bit
@@ -140,6 +141,16 @@ open class PhysicsLigament(
         gearRatio: Double = 1.0
     ) {
         constrainAngleByMotors(offsetDegrees=offsetDegrees, minDegrees=minDegrees, maxDegrees=maxDegrees, gearRatio=gearRatio, other)
+    }
+
+    fun constrainAngleByServos(
+        offsetDegrees: Double = 0.0,
+        minDegrees: Double = Double.NEGATIVE_INFINITY,
+        maxDegrees: Double = Double.POSITIVE_INFINITY,
+        gearRatio: Double = 1.0,
+        vararg other: SimulatedServo
+    ) {
+        this.angleSupplier = Supplier { (other.iterator().next().getTruePosition() / gearRatio + offsetDegrees).coerceIn(minDegrees, maxDegrees) }
     }
 
     fun constrainAngleByAngle(
