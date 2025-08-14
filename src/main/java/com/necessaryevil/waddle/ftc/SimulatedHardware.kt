@@ -31,7 +31,7 @@ object SimulatedHardware {
         addHardwareDevice("Voltage Sensor", SimulatedVoltageSensor()) // voltage sensor
     }
 
-    inline fun <reified T : HardwareDevice> addHardwareDevice(deviceName: String, device: T) {
+    fun <T : HardwareDevice> addHardwareDevice(deviceName: String, device: T): T {
 
         when (device) {
             is DcMotor -> hardwareMap.dcMotor.put(deviceName, device)
@@ -46,6 +46,8 @@ object SimulatedHardware {
             else -> hardwareMap.put(deviceName, device)
         }
 
+        return device
+
     }
 
     fun addMotor(name: String, motor: SimulatedMotor, motorType: SimulatedDcMotor.MotorType = SimulatedDcMotor.MotorType.GENERIC): SimulatedMotor {
@@ -54,8 +56,9 @@ object SimulatedHardware {
         return motor
     }
 
-    fun addSimulationObject(obj: SimulationObject) {
+    fun <T : SimulationObject> addSimulationObject(obj: T): T {
         simulationObjects.add(obj)
+        return obj
     }
 
     fun update(dt: Double) {

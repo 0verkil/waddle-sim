@@ -89,7 +89,7 @@ class SimulatedServo(
     }
 
     override fun update(dt: Double) {
-        position += (targetPosition - position).coerceIn(-maxDegreesPerSecond, maxDegreesPerSecond)
+        position += (targetPosition - position).coerceIn(-maxDegreesPerSecond * dt, maxDegreesPerSecond * dt)
     }
 
     fun lerp(a: Double, b: Double, t: Double): Double = (1.0 - t) * a + b * t

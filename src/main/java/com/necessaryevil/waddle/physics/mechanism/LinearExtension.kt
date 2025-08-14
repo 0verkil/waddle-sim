@@ -6,6 +6,7 @@ import com.necessaryevil.waddle.physics.common.SimulationObject
 import com.necessaryevil.waddle.physics.common.degrees
 import org.psilynx.psikit.Logger
 import org.psilynx.psikit.mechanism.LoggedMechanism2d
+import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 
 /**
  * @param x In meters. 0 is the center of the robot, +x is forward, -x is backward.
@@ -24,7 +25,7 @@ class LinearExtension(
     gearRatio: Double = 1.0,
     lineWidth: Double = 3.0,
     efficiency: Double = 1.0
-) : SimulationObject {
+) : SimulationObject, Mechanism {
 
     private val mechanism = LoggedMechanism2d(10.0, 10.0)
     private val root by lazy { mechanism.getRoot("root", 5.0 + x, 0.1) }
@@ -80,6 +81,10 @@ class LinearExtension(
         extension.update(dt)
 
         Logger.recordOutput("Simulation/$name", mechanism)
+    }
+
+    override fun append(ligament: LoggedMechanismLigament2d) {
+        extension.simAppend(ligament)
     }
 
 

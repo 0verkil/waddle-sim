@@ -24,12 +24,14 @@ class MecanumDrivetrain(
     val motor: SimulatedMotor,
     val gearRatio: Double = 1.0,
     val efficiency: Double = 0.8,
-    val rollingResistance: Double = 0.02,
+    val rollingResistance: Double = 0.1,
     val frontalArea: Double = 0.1
 ) : SimulationObject {
 
     var pose: Pose2d = Pose2d()
+    val inchPose: Pose2d get() = Pose2d(pose.x / 0.0254, pose.y / 0.0254, pose.rotation)
     var velocity: Pose2d = Pose2d()
+    val inchVelocity: Pose2d get() = Pose2d(velocity.x / 0.0254, velocity.y / 0.0254, velocity.rotation)
     
     // Motor power inputs (-1 to 1) as suppliers
     var leftFrontPower: DoubleSupplier = DoubleSupplier { 0.0 }

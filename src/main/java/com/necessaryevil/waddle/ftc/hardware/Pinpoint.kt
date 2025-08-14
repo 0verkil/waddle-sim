@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
 import org.psilynx.psikit.wpi.Pose2d
 import org.psilynx.psikit.wpi.Rotation2d
 
-fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.INCH), this.getY(DistanceUnit.INCH),
+fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.METER)+72.0*0.0254, this.getY(DistanceUnit.METER)+72.0*0.0254,
     Rotation2d(this.getHeading(AngleUnit.RADIANS)))
 
 class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinpointDriver(
@@ -39,13 +39,13 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
     private var offset: Pose2D = Pose2D(DistanceUnit.MM, 0.0, 0.0, AngleUnit.RADIANS, 0.0)
 
     override fun update() {
-        this.xPosition = DistanceUnit.MM.fromInches(drive.pose.x + offset.getX(DistanceUnit.INCH)) // mm
-        this.yPosition = DistanceUnit.MM.fromInches(drive.pose.y + offset.getY(DistanceUnit.INCH)) // mm
-        this.hOrientation = drive.pose.rotation.radians + offset.getHeading(AngleUnit.RADIANS) // rad
+        this.xPosition = DistanceUnit.MM.fromInches(drive.inchPose.x + offset.getX(DistanceUnit.INCH)) // mm
+        this.yPosition = DistanceUnit.MM.fromInches(drive.inchPose.y + offset.getY(DistanceUnit.INCH)) // mm
+        this.hOrientation = drive.inchPose.rotation.radians + offset.getHeading(AngleUnit.RADIANS) // rad
 
-        this.xVelocity = DistanceUnit.MM.fromInches(drive.velocity.x) // mm / s
-        this.yVelocity = DistanceUnit.MM.fromInches(drive.velocity.y) // mm / s
-        this.hVelocity = drive.velocity.rotation.radians // rad / s
+        this.xVelocity = DistanceUnit.MM.fromInches(drive.inchVelocity.x) // mm / s
+        this.yVelocity = DistanceUnit.MM.fromInches(drive.inchVelocity.y) // mm / s
+        this.hVelocity = drive.inchVelocity.rotation.radians // rad / s
     }
 
     override fun update(data: ReadData?) {
@@ -58,7 +58,7 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
 
     override fun setPosition(pos: Pose2D?) {
         if (pos == null) return
-        offset = Pose2D(pos.x - drive.pose.x, pos.y - drive.pose.y, pos.h - drive.pose.rotation.radians)
+        offset = Pose2D(pos.x - drive.inchPose.x, pos.y - drive.inchPose.y, pos.h - drive.inchPose.rotation.radians)
     }
     fun Pose2D(x: Double, y: Double, h: Double) = Pose2D(DistanceUnit.INCH, x, y, AngleUnit.RADIANS, h)
 
@@ -85,6 +85,12 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
         angleUnit: AngleUnit?
     ) {
         offset = Pose2D(offset.x, offset.y, AngleUnit.RADIANS.fromUnit(angleUnit, heading) - drive.pose.rotation.radians)
+    }
+
+    override fun initialize() = true
+
+    override fun recalibrateIMU() {
+
     }
 
     companion object {

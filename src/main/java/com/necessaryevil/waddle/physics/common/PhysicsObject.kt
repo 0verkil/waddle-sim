@@ -31,24 +31,12 @@ open class PhysicsLigament(
     color: Color8Bit = Color8Bit(235, 137, 52),
     val efficiency: Double = 1.0,
     val isCircle: Boolean = false
-) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color), SimulationObject {
+) : SimulationLigament(name, length, angle, lineWidth, color) {
 
     init {
         constrainAngleByConstant(angle)
         constrainLengthByConstant(length)
     }
-
-    var angleSupplier: Supplier<Double> = Supplier<Double> { 0.0 }
-    var lengthSupplier: Supplier<Double> = Supplier<Double> { 0.0 }
-
-    var deltaAngle: Double = 0.0
-    var deltaLength: Double = 0.0
-
-    /**
-     * In degrees.
-     */
-    var angularVelocity: Double = 0.0
-    var linearVelocity: Double = 0.0
 
     val physicsObjects: ArrayList<PhysicsLigament> = ArrayList()
 
@@ -142,6 +130,36 @@ open class PhysicsLigament(
     ) {
         constrainAngleByMotors(offsetDegrees=offsetDegrees, minDegrees=minDegrees, maxDegrees=maxDegrees, gearRatio=gearRatio, other)
     }
+
+    @Synchronized
+    fun <T : LoggedMechanismObject2d> simAppend(obj: T): T {
+        if (obj::class.isInstance(PhysicsLigament::class)) {
+            physicsObjects.add(obj as PhysicsLigament)
+        }
+        return append(obj)
+    }
+
+}
+
+open class SimulationLigament(
+    name: String,
+    length: Double = 0.0,
+    angle: Double = 0.0,
+    lineWidth: Double = 10.0,
+    color: Color8Bit = Color8Bit(235, 137, 52),
+) : LoggedMechanismLigament2d(name, length, angle, lineWidth, color), SimulationObject {
+
+    var angleSupplier: Supplier<Double> = Supplier<Double> { 0.0 }
+    var lengthSupplier: Supplier<Double> = Supplier<Double> { 0.0 }
+
+    var deltaAngle: Double = 0.0
+    var deltaLength: Double = 0.0
+
+    /**
+     * In degrees.
+     */
+    var angularVelocity: Double = 0.0
+    var linearVelocity: Double = 0.0
 
     fun constrainAngleByServos(
         offsetDegrees: Double = 0.0,
@@ -250,14 +268,6 @@ open class PhysicsLigament(
         deltaLength = length - prevLength
         angularVelocity = deltaAngle / dt
         linearVelocity = deltaLength / dt
-    }
-
-    @Synchronized
-    fun <T : LoggedMechanismObject2d> simAppend(obj: T): T {
-        if (obj::class == PhysicsLigament::class) {
-            physicsObjects.add(obj as PhysicsLigament)
-        }
-        return append(obj)
     }
 
 }
