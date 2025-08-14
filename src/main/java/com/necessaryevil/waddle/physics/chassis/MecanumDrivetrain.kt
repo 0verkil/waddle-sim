@@ -2,6 +2,7 @@ package com.necessaryevil.waddle.physics.chassis
 
 import com.necessaryevil.waddle.physics.common.SimulatedMotor
 import com.necessaryevil.waddle.physics.common.SimulationObject
+import org.psilynx.psikit.Logger
 import org.psilynx.psikit.wpi.Pose2d
 import org.psilynx.psikit.wpi.Rotation2d
 import org.psilynx.psikit.wpi.Translation2d
@@ -172,6 +173,7 @@ class MecanumDrivetrain(
         updateConnectedMotors(dt)
         
         // Logging
+        Logger.recordOutput("Simulation/Robot Pose", Pose2d(pose.x + 72.0 * 0.0254, pose.y + 72.0 * 0.0254, pose.rotation))
         /*Logger.recordOutput("SimpleDrivetrain/Robot Pose", pose)
         Logger.recordOutput("SimpleDrivetrain/Robot Velocity", velocity.translation.norm)
         Logger.recordOutput("SimpleDrivetrain/Robot Angular Velocity", velocity.rotation.degrees)

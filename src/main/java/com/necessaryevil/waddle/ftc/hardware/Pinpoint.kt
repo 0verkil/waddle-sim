@@ -60,6 +60,7 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
         if (pos == null) return
         offset = Pose2D(pos.x - drive.inchPose.x, pos.y - drive.inchPose.y, pos.h - drive.inchPose.rotation.radians)
     }
+
     fun Pose2D(x: Double, y: Double, h: Double) = Pose2D(DistanceUnit.INCH, x, y, AngleUnit.RADIANS, h)
 
     val Pose2D.x get() = this.getX(DistanceUnit.INCH)
@@ -70,14 +71,14 @@ class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinp
         posX: Double,
         distanceUnit: DistanceUnit?
     ) {
-        offset = Pose2D(DistanceUnit.INCH.fromUnit(distanceUnit, posX) - drive.pose.x, offset.y, offset.h)
+        offset = Pose2D(DistanceUnit.INCH.fromUnit(distanceUnit, posX) - drive.inchPose.x, offset.y, offset.h)
     }
 
     override fun setPosY(
         posY: Double,
         distanceUnit: DistanceUnit?
     ) {
-        offset = Pose2D(offset.x, DistanceUnit.INCH.fromUnit(distanceUnit, posY) - drive.pose.y, offset.h)
+        offset = Pose2D(offset.x, DistanceUnit.INCH.fromUnit(distanceUnit, posY) - drive.inchPose.y, offset.h)
     }
 
     override fun setHeading(

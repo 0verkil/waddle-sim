@@ -118,6 +118,9 @@ class FullRobotDemo : SimulatableLinearOpMode() {
         pinpoint.initialize()
         pinpoint.recalibrateIMU()
 
+        pinpoint.setPosX(-63.0, DistanceUnit.INCH)
+        pinpoint.setPosY(37.0, DistanceUnit.INCH)
+
         waitForStart()
 
         while (opModeIsActive()) {
@@ -233,8 +236,8 @@ class FullRobotDemo : SimulatableLinearOpMode() {
             -rotationalPid.update(rotationalError)
         )
 
-        Logger.recordOutput("Drivetrain/Pose", pinpoint.position.asPsikitPose2d())
-        Logger.recordOutput("Drivetrain/PoseInches", pinpoint.position.asWpiPose2d())
+        Logger.recordOutput("Drivetrain/Pose", pinpoint.position.asWpiPose2d())
+        Logger.recordOutput("Drivetrain/Visualized Pose", pinpoint.position.asPsikitPose2d())
 
     }
 
