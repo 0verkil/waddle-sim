@@ -29,7 +29,7 @@ repositiories {
 
 dependencies {
     // Add the below 2 lines in addition to whatever else is in your dependencies block.
-    implementation "com.necessaryevil.waddle:version"
+    implementation "org.necessaryevil.waddle:version"
     // You can use whichever version of PsiKit you prefer, but having it is highly recommended. If you aren't sure, copy what's here.
     implementation "org.psilynx:psikit:0.0.3" 
 }

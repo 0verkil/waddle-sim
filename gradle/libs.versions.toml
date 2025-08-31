@@ -7,6 +7,10 @@ mathjaxPlugin = "2.2.0"
 ejml = "0.44.0"
 psikit = "0.0.3"
 lwjgl = "2.9.3"
+dairyAndroid = "10.3.0-0.1.4"
+dairyPublish = "0.0.5"
+dairyDoc = "0.0.5"
+dairyMetadata = "0.0.1"
 
 [libraries]
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }

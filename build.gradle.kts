@@ -4,6 +4,9 @@ import org.gradle.kotlin.dsl.implementation
 plugins {
     id("com.android.library") version libs.versions.android
     kotlin("android") version libs.versions.kotlin
+    id("dev.frozenmilk.android-library") version libs.versions.dairyAndroid
+    id("dev.frozenmilk.publish") version libs.versions.dairyPublish
+    id("dev.frozenmilk.build-meta-data") version libs.versions.dairyMetadata
 }
 
 group = "me.zharel.hermes"
@@ -50,6 +53,17 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     //sonatype()
 }
+
+meta {
+    packagePath = "org.necessaryevil"
+    name = "Waddle"
+    registerField("name", "String", "\"org.necessaryevil.waddle\"")
+    registerField("clean", "Boolean") { "${dairyPublishing.clean}" }
+    registerField("gitRef", "String") { "\"${dairyPublishing.gitRef}\"" }
+    registerField("snapshot", "Boolean") { "${dairyPublishing.snapshot}" }
+    registerField("version", "String") { "\"${dairyPublishing.version}\"" }
+}
+
 
 val os: OperatingSystem = OperatingSystem.current()
 val lwjglNatives = when {
