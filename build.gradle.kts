@@ -64,6 +64,19 @@ meta {
     registerField("version", "String") { "\"${dairyPublishing.version}\"" }
 }
 
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "org.necessaryevil"
+            artifactId = "waddle"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 
 val os: OperatingSystem = OperatingSystem.current()
 val lwjglNatives = when {
