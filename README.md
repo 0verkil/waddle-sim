@@ -10,9 +10,6 @@ Although I will try my best to maintain **Waddle**, I am currently inactive in F
 
 # Installation
 
-## please do not try this installation process right now, if you really care then clone the repo and add it as a local dependency (don't @ me if you don't know how to do this, just wait)
-*These installation instructions do not yet work. Please wait, like, a week.*
-
 In your TeamCode `build.gradle`, insert the following lines:
 
 ```gradle
