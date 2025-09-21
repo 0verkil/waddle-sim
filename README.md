@@ -6,9 +6,7 @@ or you're trying to test a change remotely.
 
 ## Usage Disclaimer
 
-**Waddle** is abandonware. Although the developer (me!) is still active, I am under no obligation to fix bugs, merge pull requests, or provide assistance.
-This is so that I do not lose my sanity during the season trying to help people. Feel free to contact me with bugs, but just know that there is a possibility
-that I will not respond.
+Although I will try my best to maintain **Waddle**, I am currently inactive in FTC and also generally busy, so I may not be able to fix bugs or push updates in the near future.
 
 # Installation
 
