@@ -115,7 +115,7 @@ SimulatedHardware.addHardwareDevice("exampleServo", axon)
 SimulatedHardware.addHardwareDevice("exampleAnalogInput", axonFourthWire)
 ```
 
-Further examples are in `src/test/com/necessaryevil/waddle/HardwareDemo.kt`.
+Further examples are in `src/test/org/necessaryevil/waddle/HardwareDemo.kt`.
 
 Included `HardwareDevice`s:
 
@@ -127,10 +127,18 @@ The `LynxModule`s and `VoltageSensor` are configured by default. You do not need
 ## Setting up Mechanisms
 
 The last thing you have to do is set up the mechanisms on your robot, to visualize them and allow
-your robot to use them. See `src/test/com/necessaryevil/waddle/MechanismDemo.kt` for how to do this.
+your robot to use them. See `src/test/org/necessaryevil/waddle/MechanismDemo.kt` for how to do this.
 
 Currently supported mechanisms:
 
-`MecanumDrivetrain` (special), `LinearExtension`, custom mechanisms.
+`MecanumDrivetrain` (special), `LinearExtension`, `Arm`, `ExtensionArm`, custom mechanisms.
 
-Further elaboration on custom mechanisms will come in a future update.
+`MecanumDrivetrain` acts as the only drivetrain class (other drivetrain support coming in the future). It allows your robot to manuever around the field.
+
+`LinearExtension` acts as an extending mechanism, like linear slides or a boxtube, placed at a fixed angle on the robot.
+
+`Arm` acts as a mechanism with a fixed length that rotates. This can represent an arm on outtake slides, a claw, or even a fixed arm that has a whole end effector.
+
+`ExtensionArm` acts as a mechanism that can both extend and rotate. Examples would be pivoting boxtubes and pivoting linear slides.
+
+For custom mechanisms and a full demo, reference `src/test/org/necessaryevil/waddle/FullRobotDemo.kt`.
