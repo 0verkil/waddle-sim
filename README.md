@@ -23,13 +23,13 @@ repositiories {
     // If you already have this maven link, you can skip adding this. If you're not sure, don't skip it.
     // Add the below 3 lines in addition to whatever else is in your repositories block.
     maven {
-        url = "https://repo.dairy.foundation/releases/"
+        url = "https://repo.dairy.foundation/snapshots/"
     }
 }
 
 dependencies {
     // Add the below 2 lines in addition to whatever else is in your dependencies block.
-    implementation "org.necessaryevil.waddle:version"
+    implementation "org.necessaryevil:waddle:SNAPSHOT-60979c6"
     // You can use whichever version of PsiKit you prefer, but having it is highly recommended. If you aren't sure, copy what's here.
     implementation "org.psilynx:psikit:0.0.3" 
 }
