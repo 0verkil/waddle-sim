@@ -6,14 +6,9 @@ or you're trying to test a change remotely.
 
 ## Usage Disclaimer
 
-**Waddle** is abandonware. Although the developer (me!) is still active, I am under no obligation to fix bugs, merge pull requests, or provide assistance.
-This is so that I do not lose my sanity during the season trying to help people. Feel free to contact me with bugs, but just know that there is a possibility
-that I will not respond.
+Although I will try my best to maintain **Waddle**, I am currently inactive in FTC and also generally busy, so I may not be able to fix bugs or push updates in the near future.
 
 # Installation
-
-## please do not try this installation process right now, if you really care then clone the repo and add it as a local dependency (don't @ me if you don't know how to do this, just wait)
-*These installation instructions do not yet work. Please wait, like, a week.*
 
 In your TeamCode `build.gradle`, insert the following lines:
 
@@ -23,13 +18,13 @@ repositiories {
     // If you already have this maven link, you can skip adding this. If you're not sure, don't skip it.
     // Add the below 3 lines in addition to whatever else is in your repositories block.
     maven {
-        url = "https://repo.dairy.foundation/releases/"
+        url = "https://repo.dairy.foundation/snapshots/"
     }
 }
 
 dependencies {
     // Add the below 2 lines in addition to whatever else is in your dependencies block.
-    implementation "org.necessaryevil.waddle:version"
+    implementation "org.necessaryevil:waddle:SNAPSHOT-60979c6"
     // You can use whichever version of PsiKit you prefer, but having it is highly recommended. If you aren't sure, copy what's here.
     implementation "org.psilynx:psikit:0.0.3" 
 }
@@ -120,7 +115,7 @@ SimulatedHardware.addHardwareDevice("exampleServo", axon)
 SimulatedHardware.addHardwareDevice("exampleAnalogInput", axonFourthWire)
 ```
 
-Further examples are in `src/test/com/necessaryevil/waddle/HardwareDemo.kt`.
+Further examples are in `src/test/org/necessaryevil/waddle/HardwareDemo.kt`.
 
 Included `HardwareDevice`s:
 
@@ -132,10 +127,18 @@ The `LynxModule`s and `VoltageSensor` are configured by default. You do not need
 ## Setting up Mechanisms
 
 The last thing you have to do is set up the mechanisms on your robot, to visualize them and allow
-your robot to use them. See `src/test/com/necessaryevil/waddle/MechanismDemo.kt` for how to do this.
+your robot to use them. See `src/test/org/necessaryevil/waddle/MechanismDemo.kt` for how to do this.
 
 Currently supported mechanisms:
 
-`MecanumDrivetrain` (special), `LinearExtension`, custom mechanisms.
+`MecanumDrivetrain` (special), `LinearExtension`, `Arm`, `ExtensionArm`, custom mechanisms.
 
-Further elaboration on custom mechanisms will come in a future update.
+`MecanumDrivetrain` acts as the only drivetrain class (other drivetrain support coming in the future). It allows your robot to manuever around the field.
+
+`LinearExtension` acts as an extending mechanism, like linear slides or a boxtube, placed at a fixed angle on the robot.
+
+`Arm` acts as a mechanism with a fixed length that rotates. This can represent an arm on outtake slides, a claw, or even a fixed arm that has a whole end effector.
+
+`ExtensionArm` acts as a mechanism that can both extend and rotate. Examples would be pivoting boxtubes and pivoting linear slides.
+
+For custom mechanisms and a full demo, reference `src/test/org/necessaryevil/waddle/FullRobotDemo.kt`.
