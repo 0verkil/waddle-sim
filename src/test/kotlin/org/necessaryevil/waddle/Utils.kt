@@ -4,8 +4,8 @@ import org.necessaryevil.waddle.ftc.time.SimulatableElapsedTime
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import org.psilynx.psikit.wpi.Pose2d
-import org.psilynx.psikit.wpi.Rotation2d
+import org.psilynx.psikit.core.wpi.math.Pose2d
+import org.psilynx.psikit.core.wpi.math.Rotation2d
 
 /**
  * Example PID class.

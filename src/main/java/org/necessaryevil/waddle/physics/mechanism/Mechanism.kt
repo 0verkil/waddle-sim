@@ -1,7 +1,6 @@
 package org.necessaryevil.waddle.physics.mechanism
 
-import org.psilynx.psikit.mechanism.LoggedMechanism2d
-import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 
 interface Mechanism {
 

@@ -1,7 +1,7 @@
 package org.necessaryevil.waddle.ftc.time
 
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.psilynx.psikit.Logger
+import org.psilynx.psikit.core.Logger
 
 class SimulatableElapsedTime : ElapsedTime() {
 

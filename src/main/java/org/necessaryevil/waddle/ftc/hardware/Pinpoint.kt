@@ -5,11 +5,12 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import org.psilynx.psikit.wpi.Pose2d
-import org.psilynx.psikit.wpi.Rotation2d
+import org.psilynx.psikit.core.wpi.math.Pose2d
+import org.psilynx.psikit.core.wpi.math.Rotation2d
 
 fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.METER)+72.0*0.0254, this.getY(DistanceUnit.METER)+72.0*0.0254,
-    Rotation2d(this.getHeading(AngleUnit.RADIANS)))
+    Rotation2d(this.getHeading(AngleUnit.RADIANS))
+)
 
 class SimulatedGoBildaPinpointDriver(val drive: MecanumDrivetrain) : GoBildaPinpointDriver(
     EmulatedI2cDeviceSynch(), false) {

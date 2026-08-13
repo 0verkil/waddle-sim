@@ -19,10 +19,10 @@ import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import io.kotest.core.spec.style.FunSpec
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.wpi.Color8Bit
-import org.psilynx.psikit.wpi.Pose2d
-import org.psilynx.psikit.wpi.Rotation2d
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.wpi.Color8Bit
+import org.psilynx.psikit.core.wpi.math.Pose2d
+import org.psilynx.psikit.core.wpi.math.Rotation2d
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin

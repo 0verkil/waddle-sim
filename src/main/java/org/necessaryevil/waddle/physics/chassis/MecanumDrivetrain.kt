@@ -2,10 +2,10 @@ package org.necessaryevil.waddle.physics.chassis
 
 import org.necessaryevil.waddle.physics.common.SimulatedMotor
 import org.necessaryevil.waddle.physics.common.SimulationObject
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.wpi.Pose2d
-import org.psilynx.psikit.wpi.Rotation2d
-import org.psilynx.psikit.wpi.Translation2d
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.wpi.math.Pose2d
+import org.psilynx.psikit.core.wpi.math.Rotation2d
+import org.psilynx.psikit.core.wpi.math.Translation2d
 import java.util.function.DoubleSupplier
 import kotlin.math.pow
 import kotlin.math.abs

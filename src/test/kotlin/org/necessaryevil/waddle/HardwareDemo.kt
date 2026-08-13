@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import io.kotest.core.spec.style.FunSpec
 import org.firstinspires.ftc.robotcore.external.JavaUtil.isPrime
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.psilynx.psikit.Logger
+import org.psilynx.psikit.core.Logger
 import kotlin.math.cos
 import kotlin.math.round
 import kotlin.math.sin

@@ -3,9 +3,9 @@ package org.necessaryevil.waddle.ftc
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.RLOGServer
-import java.util.Stack
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.rlog.RLOGServer
+import java.util.*
 import kotlin.concurrent.thread
 
 /**
@@ -150,7 +150,7 @@ class Simulation(val opMode: OpMode, val stopSeconds: Double = -1.0, val deltaMi
                 }
 
                 try {
-                    Thread.sleep( (deltaMillis * 10.0).toLong() )
+                    Thread.sleep((deltaMillis * 10.0).toLong())
                 } catch (e: Exception) {
 
                 }

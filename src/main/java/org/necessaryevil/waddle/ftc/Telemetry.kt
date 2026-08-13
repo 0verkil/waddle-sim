@@ -3,7 +3,7 @@ package org.necessaryevil.waddle.ftc
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.robotcore.external.Func
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.psilynx.psikit.Logger
+import org.psilynx.psikit.core.Logger
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

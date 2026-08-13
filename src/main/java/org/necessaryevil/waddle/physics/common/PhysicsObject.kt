@@ -1,11 +1,11 @@
 package org.necessaryevil.waddle.physics.common
 
 import org.necessaryevil.waddle.ftc.hardware.SimulatedServo
-import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
-import org.psilynx.psikit.mechanism.LoggedMechanismObject2d
-import org.psilynx.psikit.wpi.Color8Bit
-import org.psilynx.psikit.wpi.Rotation2d
-import org.psilynx.psikit.wpi.Translation2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanismObject2d
+import org.psilynx.psikit.core.wpi.Color8Bit
+import org.psilynx.psikit.core.wpi.math.Rotation2d
+import org.psilynx.psikit.core.wpi.math.Translation2d
 import java.util.function.Supplier
 import kotlin.math.PI
 import kotlin.math.cos

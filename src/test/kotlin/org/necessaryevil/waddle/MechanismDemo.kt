@@ -8,9 +8,9 @@ import org.necessaryevil.waddle.physics.common.SimulatedMotor
 import org.necessaryevil.waddle.physics.mechanism.LinearExtension
 import com.qualcomm.robotcore.hardware.DcMotor
 import io.kotest.core.spec.style.FunSpec
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.wpi.Pose2d
-import org.psilynx.psikit.wpi.Rotation2d
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.wpi.math.Pose2d
+import org.psilynx.psikit.core.wpi.math.Rotation2d
 
 
 class MechanismDemo : SimulatableLinearOpMode() {

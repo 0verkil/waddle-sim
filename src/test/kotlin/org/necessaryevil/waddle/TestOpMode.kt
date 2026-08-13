@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import io.kotest.core.spec.style.FunSpec
-import org.psilynx.psikit.Logger
+import org.psilynx.psikit.core.Logger
 
 @TeleOp
 class TestOpMode : OpMode() {

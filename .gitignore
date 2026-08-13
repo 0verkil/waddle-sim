@@ -11,3 +11,6 @@
 .idea/misc.xml
 .idea/runConfigurations.xml
 .idea/vcs.xml
+
+.DS_Store
+local.properties

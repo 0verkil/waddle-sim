@@ -4,9 +4,9 @@ import org.necessaryevil.waddle.physics.common.PhysicsLigament
 import org.necessaryevil.waddle.physics.common.SimulatedMotor
 import org.necessaryevil.waddle.physics.common.SimulationObject
 import org.necessaryevil.waddle.physics.common.degrees
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.mechanism.LoggedMechanism2d
-import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 
 /**
  * @param x In meters. 0 is the center of the robot, +x is forward, -x is backward.
