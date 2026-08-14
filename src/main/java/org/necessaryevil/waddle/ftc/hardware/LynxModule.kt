@@ -26,7 +26,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.robotcore.internal.network.RobotCoreCommandList
 import org.firstinspires.ftc.robotcore.internal.ui.ProgressParameters
 import org.psilynx.psikit.core.wpi.math.Rotation2d
-import org.psilynx.psikit.wpi.Rotation2d
 import java.util.concurrent.TimeUnit
 
 class SimulatedLynxModule(isControlHub: Boolean) : LynxModule(SimulatedLynxUsbDevice(), 0, isControlHub, true) {

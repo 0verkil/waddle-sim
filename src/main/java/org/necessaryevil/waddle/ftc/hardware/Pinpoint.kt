@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
 import org.psilynx.psikit.core.wpi.math.Pose2d
 import org.psilynx.psikit.core.wpi.math.Rotation2d
 
-fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.METER)+72.0*0.0254, this.getY(DistanceUnit.METER)+72.0*0.0254,
+fun Pose2D.asPsikitPose2d(): Pose2d = Pose2d(this.getX(DistanceUnit.METER), this.getY(DistanceUnit.METER),
     Rotation2d(this.getHeading(AngleUnit.RADIANS))
 )
 

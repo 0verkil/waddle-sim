@@ -3,9 +3,9 @@ import org.gradle.kotlin.dsl.implementation
 
 plugins {
     id("com.android.library") version libs.versions.android
-//    id("dev.frozenmilk.android-library") version libs.versions.dairyAndroid
-//    id("dev.frozenmilk.publish") version libs.versions.dairyPublish
-//    id("dev.frozenmilk.build-meta-data") version libs.versions.dairyMetadata
+    id("dev.frozenmilk.android-library") version libs.versions.dairyAndroid
+    id("dev.frozenmilk.publish") version libs.versions.dairyPublish
+    id("dev.frozenmilk.build-meta-data") version libs.versions.dairyMetadata
 }
 
 group = "me.zharel.hermes"
@@ -48,28 +48,28 @@ repositories {
     //sonatype()
 }
 
-//meta {
-//    packagePath = "org.necessaryevil"
-//    name = "Waddle"
-//    registerField("name", "String", "\"org.necessaryevil.waddle\"")
-//    registerField("clean", "Boolean") { "${dairyPublishing.clean}" }
-//    registerField("gitRef", "String") { "\"${dairyPublishing.gitRef}\"" }
-//    registerField("snapshot", "Boolean") { "${dairyPublishing.snapshot}" }
-//    registerField("version", "String") { "\"${dairyPublishing.version}\"" }
-//}
-//
-//publishing {
-//    publications {
-//        register<MavenPublication>("release") {
-//            groupId = "org.necessaryevil"
-//            artifactId = "waddle"
-//
-//            afterEvaluate {
-//                from(components["release"])
-//            }
-//        }
-//    }
-//}
+meta {
+    packagePath = "org.necessaryevil"
+    name = "Waddle"
+    registerField("name", "String", "\"org.necessaryevil.waddle\"")
+    registerField("clean", "Boolean") { "${dairyPublishing.clean}" }
+    registerField("gitRef", "String") { "\"${dairyPublishing.gitRef}\"" }
+    registerField("snapshot", "Boolean") { "${dairyPublishing.snapshot}" }
+    registerField("version", "String") { "\"${dairyPublishing.version}\"" }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "org.necessaryevil"
+            artifactId = "waddle"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
 
 
 val os: OperatingSystem = OperatingSystem.current()
@@ -88,7 +88,7 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation(libs.bundles.psikit)
 
-    testImplementation(libs.kotlin.reflect)
+//    testImplementation(libs.kotlin.reflect)
     testImplementation(libs.bundles.kotest)
 
     /*implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))

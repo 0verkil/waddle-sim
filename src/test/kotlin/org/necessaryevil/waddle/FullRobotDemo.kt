@@ -70,7 +70,7 @@ class FullRobotDemo : SimulatableLinearOpMode() {
     // ===== PID targets =====
     var liftTarget = 2000.0
     var extensionTarget = 0.0
-    var robotTarget = Pose2d(-55.0, 55.0, Rotation2d.fromDegrees(-45.0))
+    var robotTarget = Pose2d(55.0, 55.0, Rotation2d.fromDegrees(-135.0))
 
     // state
     enum class AutoState {
@@ -110,8 +110,8 @@ class FullRobotDemo : SimulatableLinearOpMode() {
         pinpoint.initialize()
         pinpoint.recalibrateIMU()
 
-        pinpoint.setPosX(-63.0, DistanceUnit.INCH)
-        pinpoint.setPosY(37.0, DistanceUnit.INCH)
+        pinpoint.setPosX(37.0, DistanceUnit.INCH)
+        pinpoint.setPosY(63.0, DistanceUnit.INCH)
 
         waitForStart()
 
@@ -142,7 +142,7 @@ class FullRobotDemo : SimulatableLinearOpMode() {
 
                 AutoState.INTAKE_SPIKE -> {
 
-                    robotTarget = Pose2d(-50.0, 50.0, Rotation2d())
+                    robotTarget = Pose2d(50.0, 50.0, Rotation2d.fromDegrees(-90.0))
                     liftTarget = 0.0
                     extensionTarget = 500.0 + (runtime - 2.0) * 500.0
 
@@ -157,7 +157,7 @@ class FullRobotDemo : SimulatableLinearOpMode() {
 
                 AutoState.DEPO_SECOND -> {
                     extensionTarget = 0.0
-                    robotTarget = Pose2d(-55.0, 55.0, Rotation2d.fromDegrees(-45.0))
+                    robotTarget = Pose2d(55.0, 55.0, Rotation2d.fromDegrees(-135.0))
 
                     if (extension.currentPosition < 50.0) {
                         liftTarget = 2000.0
@@ -272,7 +272,7 @@ class FullRobotSimulator : FunSpec({
             ),
         )
 
-        drive.pose = Pose2d(-65.0 * 0.0254, 37.0 * 0.0254, Rotation2d())
+        drive.pose = Pose2d(37.0 * 0.0254, 65.0 * 0.0254, Rotation2d.fromDegrees(-90.0))
 
         // add pinpoint
         SimulatedHardware.addHardwareDevice(
